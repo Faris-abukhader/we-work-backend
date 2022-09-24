@@ -1,0 +1,28 @@
+{
+  "name": "wework-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js",
+    "dev": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/cors": "^8.1.0",
+    "@fastify/static": "^6.5.0",
+    "@prisma/client": "^4.3.1",
+    "bcrypt": "^5.0.1",
+    "fastify": "^4.3.0",
+    "handlebars": "^4.7.7",
+    "jsonwebtoken": "^8.5.1",
+    "nodemailer": "^6.7.7",
+    "nodemon": "^2.0.19"
+  },
+  "devDependencies": {
+    "prisma": "^4.3.1"
+  }
+
+}
