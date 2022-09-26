@@ -1,0 +1,193 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  password  String
+  firstName String
+  lastName  String
+  nationality String?
+  avatar      String?
+  credit      Decimal @default(100.0)
+  currentLocation  String?
+  accountType String @db.Char(1)
+  createdAt   DateTime @default(now())
+  lastUpdate  DateTime @updatedAt
+  freelancer   Freelancer?
+  employer   Employer?
+  languageList         Language[]
+  conversations        Conversation[]
+}
+
+model Freelancer {
+  id          Int @id
+  userId      Int @unique
+  user        User @relation(fields: [userId],references: [id])
+  hourlyPrice Decimal?
+  weeklyWantingHour    Int?
+  aboutMe              String? @db.Text
+  shortIntro           String? @db.VarChar(50)
+  educationList        Education[]
+  certificationList    Certification[]
+  employmentList       EmploymentHistory[]
+  proposalList         Proposal[]
+  hiringRequest        HiringRequest[]
+  products             Product[]
+}
+
+model Employer{
+  id          Int @id
+  userId      Int @unique
+  user        User @relation(fields: [userId],references: [id])
+  jobList     Job[]
+  hiringRequest HiringRequest[]
+
+}
+
+
+model Language{
+  id          Int @id
+  ownerId     Int 
+  user        User @relation(fields: [ownerId],references: [id])
+  name        String
+  level       Int
+}
+
+model Education {
+  id          Int @id
+  ownerId     Int 
+  freelancer  Freelancer @relation(fields: [ownerId],references: [id])
+  schoolName  String
+  dateAttend  DateTime
+  dateGraduate DateTime
+  areaOfStudy  String
+  degree       String
+  description  String?
+}
+
+model Certification {
+id          Int @id
+ownerId     Int 
+freelancer  Freelancer @relation(fields: [ownerId],references: [id])
+fromWhere     String
+issuedDate    DateTime
+name          String
+description   String?
+
+}
+
+
+model EmploymentHistory{
+id          Int @id
+ownerId     Int 
+freelancer  Freelancer @relation(fields: [ownerId],references: [id])
+companyName String
+country     String
+city        String
+fromDate    DateTime
+untilDate   DateTime
+description String?
+}
+
+model Job{
+id          Int @id
+ownerId     Int 
+employer  Employer @relation(fields: [ownerId],references: [id])
+title       String
+location    String
+description String
+price       Decimal 
+skillRequired String
+isClosed      Boolean @default(false)
+accepted      Boolean @default(false)
+jobCategory   String
+proposalList  Proposal[]
+transaction   Transaction?
+hiringRequest HiringRequest?
+}
+
+
+model Proposal {
+id          Int @id
+ownerId     Int 
+freelancer  Freelancer @relation(fields: [ownerId],references: [id])
+jobId       Int
+job         Job @relation(fields: [jobId],references: [id])
+bid         Decimal
+timeNeeded  String
+description String
+createdAt   DateTime @default(now())
+lastUpdate  DateTime @updatedAt
+isAccepted  Boolean @default(false)
+isDecline   Boolean @default(false)
+reasonOfDecline String? 
+dateOfDecline DateTime?
+}
+
+
+model Transaction {
+id          Int @id
+jobId       Int @unique
+job         Job @relation(fields: [jobId],references: [id])
+amount      Decimal
+isRefunded  Boolean @default(false)
+dateOfRefunding DateTime?
+reasonOfRefunding String? 
+createdAt   DateTime @default(now())
+lastUpdate  DateTime @updatedAt
+}
+
+model HiringRequest {
+id          Int @id
+ownerId     Int
+owner              Employer @relation(fields: [ownerId],references: [id])
+freelancerId Int
+freelancer         Freelancer @relation(fields: [freelancerId],references: [id])
+jobId        Int   @unique
+job                Job @relation(fields: [jobId],references: [id])
+ownerNote    String?
+freelancerNote String?
+isEmployerAccepet Boolean?
+isFreelancerAccept Boolean?
+productId          Int
+product            Product?
+}
+
+
+model Product {
+id          Int @id
+creatorId   Int
+creator      Freelancer @relation(fields: [creatorId],references: [id])
+content     String
+requestId   Int @unique
+hiringRequest   HiringRequest @relation(fields: [requestId],references: [id])
+employerRate    Decimal?
+createdAt   DateTime @default(now())
+lastUpdate  DateTime @updatedAt
+}
+
+model Conversation{
+id          Int @id
+users       User[]
+messages    Message[]
+createdAt   DateTime @default(now())
+
+}
+
+model Message {
+id          Int @id
+conversationId  Int
+conversation    Conversation @relation(fields: [conversationId],references: [id])
+content         String
+senderId        Int
+createdAt   DateTime @default(now())
+}
