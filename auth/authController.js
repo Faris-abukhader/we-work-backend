@@ -1,59 +1,108 @@
 const { PrismaClient } = require("@prisma/client")
 const prisma = new PrismaClient()
 const {userRange} = require('../util/paginationRange')
-
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
+const saltRounds = 10
+const {sendEmail} = require('../util/emailConfig/sendInBlue')
 
 
 const signUp = async(req,reply)=>{
     try{
+
         // extracting  the data from request body
-        const {email,password,firstName,middleName,lastName,language} = req.body
+        const {email,password,firstName,lastName,accountType} = req.body
 
         // calling hash function to hash the password before save it into DB
         const hash = bcrypt.hashSync(password, saltRounds);
 
-        // sign one token and pass email as data in it
-        const token = jwt.sign({email},process.env.JWT_SECRET)
+
+        // building the data need for creating user user whether was freelancer or employer
+        let isFreelancer = accountType=='f'
+        let credit = Math.floor(Math.random() * 1000) + 200
+        let data = {
+            email,
+            password:hash,
+            accountType,
+            firstName,
+            lastName,
+            token:''
+        }
+        let include = {}
+
+        if(isFreelancer){
+           data.freelancer = {
+            create:{}
+           }
+           include = {
+            freelancer:true
+           }
+        }else{
+            data.employer = {
+                create:{}
+            }
+            include = {
+                employer:true
+            }    
+        }
 
         // creating new user in DB
         const newUser =  await prisma.user.create({
-            data:{
-                email,
-                password:hash,
-                role:'client',
-                client:{
-                    create:{
-                        firstName:firstName,
-                        middleName:middleName??" ",
-                        lastName:lastName,    
-                        isVerified:false,
-                        token,
-                        language
-                    }
-                }
-            },include:{
-                client:true
-            }
+            data,
+            include
         }) 
 
+
+        // getting back the account id after it generate in DB
+        let targetId = ''
+        if(isFreelancer){
+            targetId = newUser.freelancer.id
+        }else{
+            targetId = newUser.employer.id
+        }
+
+
+        // sign one token and pass newUserId to it as data
+        const token = jwt.sign({id:targetId},process.env.JWT_SECRET)
+
+
+        if(isFreelancer){
+            include = {
+             freelancer:true
+            }
+         }else{
+             include = {
+                 employer:true
+             }    
+         }
+
+
+        // updating new user and save the token to it
+        const user = await prisma.user.update({
+            where:{
+                id:newUser.id
+            },
+            data:{
+            token
+            },
+            include
+        })
+
+
         // sending email to user to verify his account
-        sendEmail([{email}],getTargetLanguageScript(language,'verify').emailProject,'verify',language,process.env.API_URL,token,`${firstName + ' ' + lastName}`)
+        sendEmail([{email}],'verify',process.env.API_URL,token,`${firstName + ' ' + lastName}`)
         
         reply.send(newUser)  
 
     }catch(err){
         console.log(err)
-        createNewLog({content:err,topic:'auth/signUp',issuer:'website'})
+        reply.send(err)
     }
-
-    reply.code(500).send({message:"somethingWentWrong"}) 
 }
 
 
 const signIn = async(req,reply)=>{
-    var errorMessage = ''
       try{
-        
         // extracting  the data from request body
         const {email,password} = req.body
 
@@ -63,14 +112,25 @@ const signIn = async(req,reply)=>{
                 email,
             },
             include:{
-                client:true
+                freelancer:true,
+                employer:true
             }
         })
+
+        if(!targetUser) throw Error('No use found')
+
+        // extract one one accout
+        let tempUser = targetUser
+        if(tempUser.accountType=='f'){
+            delete tempUser.employer
+        }else{
+            delete tempUser.freelancer
+        }
 
         console.log(targetUser)
 
         // if the user isn't verify throw error
-        if(!targetUser.client.isVerified)throw new Error(`user isn't verified`)
+        if(!targetUser.isVerified)throw new Error(`user isn't verified`)
 
         // compare the found user's password with request password
         const isPasswordCorrect = bcrypt.compareSync(password, targetUser.password);
@@ -81,21 +141,12 @@ const signIn = async(req,reply)=>{
         if(!isPasswordCorrect) throw new Error(`Password isn't correct`)
 
         // return the user 
-        reply.send(targetUser)
+        reply.send(tempUser)
     
       }catch(err){
-        console.log('***********************')
-        console.log(err.message)
-        console.log('***********************')
-        // user isn't found
-        if(String(err.message).length > 40){
-            errorMessage = 'userIsnotFound'
-        }else{
-            errorMessage = String(err.message)
-        }
-        createNewLog({content:err,topic:'auth/signIn',issuer:'website'})
+        console.log(err)
+        reply.send(err) 
       }
-      reply.code(500).send({message:errorMessage}) 
 
 }
 

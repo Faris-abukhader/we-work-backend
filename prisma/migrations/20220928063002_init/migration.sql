@@ -12,27 +12,30 @@ CREATE TABLE `User` (
     `accountType` CHAR(1) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `lastUpdate` DATETIME(3) NOT NULL,
+    `isVerify` BOOLEAN NOT NULL DEFAULT false,
+    `verifiedDate` DATETIME(3) NULL,
+    `token` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `User_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Freelance` (
-    `id` INTEGER NOT NULL,
+CREATE TABLE `Freelancer` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `userId` INTEGER NOT NULL,
     `hourlyPrice` DECIMAL(65, 30) NULL,
     `weeklyWantingHour` INTEGER NULL,
     `aboutMe` TEXT NULL,
     `shortIntro` VARCHAR(50) NULL,
 
-    UNIQUE INDEX `Freelance_userId_key`(`userId`),
+    UNIQUE INDEX `Freelancer_userId_key`(`userId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `Employer` (
-    `id` INTEGER NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `userId` INTEGER NOT NULL,
 
     UNIQUE INDEX `Employer_userId_key`(`userId`),
@@ -41,7 +44,7 @@ CREATE TABLE `Employer` (
 
 -- CreateTable
 CREATE TABLE `Language` (
-    `id` INTEGER NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `ownerId` INTEGER NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `level` INTEGER NOT NULL,
@@ -51,7 +54,7 @@ CREATE TABLE `Language` (
 
 -- CreateTable
 CREATE TABLE `Education` (
-    `id` INTEGER NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `ownerId` INTEGER NOT NULL,
     `schoolName` VARCHAR(191) NOT NULL,
     `dateAttend` DATETIME(3) NOT NULL,
@@ -65,7 +68,7 @@ CREATE TABLE `Education` (
 
 -- CreateTable
 CREATE TABLE `Certification` (
-    `id` INTEGER NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `ownerId` INTEGER NOT NULL,
     `fromWhere` VARCHAR(191) NOT NULL,
     `issuedDate` DATETIME(3) NOT NULL,
@@ -77,7 +80,7 @@ CREATE TABLE `Certification` (
 
 -- CreateTable
 CREATE TABLE `EmploymentHistory` (
-    `id` INTEGER NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `ownerId` INTEGER NOT NULL,
     `companyName` VARCHAR(191) NOT NULL,
     `country` VARCHAR(191) NOT NULL,
@@ -91,7 +94,7 @@ CREATE TABLE `EmploymentHistory` (
 
 -- CreateTable
 CREATE TABLE `Job` (
-    `id` INTEGER NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `ownerId` INTEGER NOT NULL,
     `title` VARCHAR(191) NOT NULL,
     `location` VARCHAR(191) NOT NULL,
@@ -107,7 +110,7 @@ CREATE TABLE `Job` (
 
 -- CreateTable
 CREATE TABLE `Proposal` (
-    `id` INTEGER NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `ownerId` INTEGER NOT NULL,
     `jobId` INTEGER NOT NULL,
     `bid` DECIMAL(65, 30) NOT NULL,
@@ -125,7 +128,7 @@ CREATE TABLE `Proposal` (
 
 -- CreateTable
 CREATE TABLE `Transaction` (
-    `id` INTEGER NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `jobId` INTEGER NOT NULL,
     `amount` DECIMAL(65, 30) NOT NULL,
     `isRefunded` BOOLEAN NOT NULL DEFAULT false,
@@ -140,13 +143,13 @@ CREATE TABLE `Transaction` (
 
 -- CreateTable
 CREATE TABLE `HiringRequest` (
-    `id` INTEGER NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `ownerId` INTEGER NOT NULL,
     `freelancerId` INTEGER NOT NULL,
     `jobId` INTEGER NOT NULL,
     `ownerNote` VARCHAR(191) NULL,
     `freelancerNote` VARCHAR(191) NULL,
-    `isEmployeerAccepet` BOOLEAN NULL,
+    `isEmployerAccepet` BOOLEAN NULL,
     `isFreelancerAccept` BOOLEAN NULL,
     `productId` INTEGER NOT NULL,
 
@@ -156,7 +159,7 @@ CREATE TABLE `HiringRequest` (
 
 -- CreateTable
 CREATE TABLE `Product` (
-    `id` INTEGER NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `creatorId` INTEGER NOT NULL,
     `content` VARCHAR(191) NOT NULL,
     `requestId` INTEGER NOT NULL,
@@ -170,7 +173,7 @@ CREATE TABLE `Product` (
 
 -- CreateTable
 CREATE TABLE `Conversation` (
-    `id` INTEGER NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -178,10 +181,11 @@ CREATE TABLE `Conversation` (
 
 -- CreateTable
 CREATE TABLE `Message` (
-    `id` INTEGER NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `conversationId` INTEGER NOT NULL,
     `content` VARCHAR(191) NOT NULL,
     `senderId` INTEGER NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -196,7 +200,7 @@ CREATE TABLE `_ConversationToUser` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `Freelance` ADD CONSTRAINT `Freelance_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Freelancer` ADD CONSTRAINT `Freelancer_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Employer` ADD CONSTRAINT `Employer_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -205,19 +209,19 @@ ALTER TABLE `Employer` ADD CONSTRAINT `Employer_userId_fkey` FOREIGN KEY (`userI
 ALTER TABLE `Language` ADD CONSTRAINT `Language_ownerId_fkey` FOREIGN KEY (`ownerId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Education` ADD CONSTRAINT `Education_ownerId_fkey` FOREIGN KEY (`ownerId`) REFERENCES `Freelance`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Education` ADD CONSTRAINT `Education_ownerId_fkey` FOREIGN KEY (`ownerId`) REFERENCES `Freelancer`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Certification` ADD CONSTRAINT `Certification_ownerId_fkey` FOREIGN KEY (`ownerId`) REFERENCES `Freelance`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Certification` ADD CONSTRAINT `Certification_ownerId_fkey` FOREIGN KEY (`ownerId`) REFERENCES `Freelancer`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `EmploymentHistory` ADD CONSTRAINT `EmploymentHistory_ownerId_fkey` FOREIGN KEY (`ownerId`) REFERENCES `Freelance`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `EmploymentHistory` ADD CONSTRAINT `EmploymentHistory_ownerId_fkey` FOREIGN KEY (`ownerId`) REFERENCES `Freelancer`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Job` ADD CONSTRAINT `Job_ownerId_fkey` FOREIGN KEY (`ownerId`) REFERENCES `Employer`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Proposal` ADD CONSTRAINT `Proposal_ownerId_fkey` FOREIGN KEY (`ownerId`) REFERENCES `Freelance`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Proposal` ADD CONSTRAINT `Proposal_ownerId_fkey` FOREIGN KEY (`ownerId`) REFERENCES `Freelancer`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Proposal` ADD CONSTRAINT `Proposal_jobId_fkey` FOREIGN KEY (`jobId`) REFERENCES `Job`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -229,13 +233,13 @@ ALTER TABLE `Transaction` ADD CONSTRAINT `Transaction_jobId_fkey` FOREIGN KEY (`
 ALTER TABLE `HiringRequest` ADD CONSTRAINT `HiringRequest_ownerId_fkey` FOREIGN KEY (`ownerId`) REFERENCES `Employer`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `HiringRequest` ADD CONSTRAINT `HiringRequest_freelancerId_fkey` FOREIGN KEY (`freelancerId`) REFERENCES `Freelance`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `HiringRequest` ADD CONSTRAINT `HiringRequest_freelancerId_fkey` FOREIGN KEY (`freelancerId`) REFERENCES `Freelancer`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `HiringRequest` ADD CONSTRAINT `HiringRequest_jobId_fkey` FOREIGN KEY (`jobId`) REFERENCES `Job`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Product` ADD CONSTRAINT `Product_creatorId_fkey` FOREIGN KEY (`creatorId`) REFERENCES `Freelance`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Product` ADD CONSTRAINT `Product_creatorId_fkey` FOREIGN KEY (`creatorId`) REFERENCES `Freelancer`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Product` ADD CONSTRAINT `Product_requestId_fkey` FOREIGN KEY (`requestId`) REFERENCES `HiringRequest`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

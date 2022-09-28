@@ -8,11 +8,17 @@ const jwt = require('jsonwebtoken')
 const fastify = Fastify({
   logger: true
 })
+const {sendEmail} = require('./util/emailConfig/sendInBlue')
 
 
 fastify.get('/', async (request, reply) => {
     return { hello: 'world' }
   })
+
+
+// routes
+fastify.register(require('./auth/authRoute'),{ prefix : '/auth'})
+
 
 const start = async () => {
 try {
@@ -25,6 +31,8 @@ try {
 start()
 
 
+
+
 const generateWebsiteToken = ()=>{
   const token = jwt.sign({website_secret:process.env.WEBSITE_SECRET},process.env.JWT_SECRET)
   console.log(token)
@@ -32,3 +40,5 @@ const generateWebsiteToken = ()=>{
 }
 // generateWebsiteToken()
 
+
+// sendEmail([{email:'faresraed2011@yahoo.com'}],'verify',process.env.API_URL,token='faklhrfkehrjk',`${'fares' + ' ' + 'raed'}`)

@@ -24,14 +24,17 @@ model User {
   lastUpdate  DateTime @updatedAt
   freelancer   Freelancer?
   employer   Employer?
+  isVerified             Boolean @default(false)
+  verifiedDate         DateTime?
   languageList         Language[]
   conversations        Conversation[]
+  token                String
 }
 
 model Freelancer {
-  id          Int @id
+  id          Int @id @default(autoincrement())
   userId      Int @unique
-  user        User @relation(fields: [userId],references: [id])
+  user        User @relation(fields: [userId],references: [id],onDelete: Cascade)
   hourlyPrice Decimal?
   weeklyWantingHour    Int?
   aboutMe              String? @db.Text
@@ -45,9 +48,9 @@ model Freelancer {
 }
 
 model Employer{
-  id          Int @id
+  id          Int @id @default(autoincrement())
   userId      Int @unique
-  user        User @relation(fields: [userId],references: [id])
+  user        User @relation(fields: [userId],references: [id],onDelete: Cascade)
   jobList     Job[]
   hiringRequest HiringRequest[]
 
@@ -55,7 +58,7 @@ model Employer{
 
 
 model Language{
-  id          Int @id
+  id          Int @id @default(autoincrement())
   ownerId     Int 
   user        User @relation(fields: [ownerId],references: [id])
   name        String
@@ -63,7 +66,7 @@ model Language{
 }
 
 model Education {
-  id          Int @id
+  id          Int @id @default(autoincrement())
   ownerId     Int 
   freelancer  Freelancer @relation(fields: [ownerId],references: [id])
   schoolName  String
@@ -75,7 +78,7 @@ model Education {
 }
 
 model Certification {
-id          Int @id
+id          Int @id @default(autoincrement())
 ownerId     Int 
 freelancer  Freelancer @relation(fields: [ownerId],references: [id])
 fromWhere     String
@@ -87,7 +90,7 @@ description   String?
 
 
 model EmploymentHistory{
-id          Int @id
+id          Int @id @default(autoincrement())
 ownerId     Int 
 freelancer  Freelancer @relation(fields: [ownerId],references: [id])
 companyName String
@@ -99,7 +102,7 @@ description String?
 }
 
 model Job{
-id          Int @id
+id          Int @id @default(autoincrement())
 ownerId     Int 
 employer  Employer @relation(fields: [ownerId],references: [id])
 title       String
@@ -117,7 +120,7 @@ hiringRequest HiringRequest?
 
 
 model Proposal {
-id          Int @id
+id          Int @id @default(autoincrement())
 ownerId     Int 
 freelancer  Freelancer @relation(fields: [ownerId],references: [id])
 jobId       Int
@@ -135,7 +138,7 @@ dateOfDecline DateTime?
 
 
 model Transaction {
-id          Int @id
+id          Int @id @default(autoincrement())
 jobId       Int @unique
 job         Job @relation(fields: [jobId],references: [id])
 amount      Decimal
@@ -147,7 +150,7 @@ lastUpdate  DateTime @updatedAt
 }
 
 model HiringRequest {
-id          Int @id
+id          Int @id @default(autoincrement())
 ownerId     Int
 owner              Employer @relation(fields: [ownerId],references: [id])
 freelancerId Int
@@ -164,7 +167,7 @@ product            Product?
 
 
 model Product {
-id          Int @id
+id          Int @id @default(autoincrement())
 creatorId   Int
 creator      Freelancer @relation(fields: [creatorId],references: [id])
 content     String
@@ -176,7 +179,7 @@ lastUpdate  DateTime @updatedAt
 }
 
 model Conversation{
-id          Int @id
+id          Int @id @default(autoincrement())
 users       User[]
 messages    Message[]
 createdAt   DateTime @default(now())
@@ -184,7 +187,7 @@ createdAt   DateTime @default(now())
 }
 
 model Message {
-id          Int @id
+id          Int @id @default(autoincrement())
 conversationId  Int
 conversation    Conversation @relation(fields: [conversationId],references: [id])
 content         String

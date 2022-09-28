@@ -1,5 +1,7 @@
 const {
-} = require('../user/userSchema')
+  signUpSchema,
+  signInSchema,
+} = require('./authSchema')
 
 const authRoutes = async(fastify, options, done)=> {
   
@@ -7,13 +9,13 @@ const authRoutes = async(fastify, options, done)=> {
 
     fastify.post('/signIn',signInSchema)
 
-    fastify.post('/staff/signIn',staffSignInSchema)
+    // fastify.post('/staff/signIn',staffSignInSchema)
 
-    fastify.post('/resetPasswordRequest',sendRequestForNewPasswordSchema)
+    // fastify.post('/resetPasswordRequest',sendRequestForNewPasswordSchema)
 
-    fastify.put('/resetPassword',resetPasswordSchema)
+    // fastify.put('/resetPassword',resetPasswordSchema)
 
-    fastify.get('/verify',verifyShema)
+    // fastify.get('/verify',verifyShema)
 
     
 }

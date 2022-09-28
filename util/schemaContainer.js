@@ -26,6 +26,7 @@ userObj = {
         credit:{type:'integer'},
         currentLocation:{type:'string'},
         accountType:{type:'string'},
+        token:{type:'string'},
         createdAt:{type:'string'},
         lastUpdate:{type:'string'},
         freelancer:freelancerObj,
@@ -65,7 +66,7 @@ freelancerObj = {
         },
         employmentList:{
             type:'array',
-            items:employmentObj
+            items:employmentHistoryObj
         },
         proposalList:{
             type:'array',
