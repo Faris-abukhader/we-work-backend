@@ -1,10 +1,10 @@
 const {
   signUp,
-  staffSignIn,
   signIn,
   verify,
   sendRequestForNewPassword,
   resetPassword,
+  resendVerifyingEmail,
 } =  require('./authController')
 
 const {userObj} = require('../util/schemaContainer')
@@ -55,62 +55,79 @@ const signInSchema = {
     },
     // preValidation:websiteMiddleware,
     handler:signIn
-
 }
 
 
+const verifySchema = {
+  schema: {
+      response:200
+    },
+    // preValidation:websiteMiddleware,
+    handler:verify
+}
 
 
-// const getOneUserAllLogsSchema = {
-//     schema: {
-//         params:{
-//             required:['id'],
-//             properties:{
-//                 id : {type:'string'},
-//             }    
-//         },
-//         response:{
-//             200:{
-//               type: 'object',
-//               properties: {
-//                 data:{
-//                   type: 'array',
-//                   item: logObj,
-//                 },          
-//                 pageNumber: { type: 'integer' },
-//               }
-//             }
-//         }
-//       },
-//       preValidation:staffMiddleware,
-//       handler:getOneUserAllLogs
-
-// }
+const resendVerifyingEmailSchema = {
+  schema: {
+      params: {
+        type: 'object',
+        required: ['email'],
+        properties:{
+          email : {type:'string'},
+        }
+      },
+      response:{
+        200:{
+          message : {type:'string'}
+        }
+      }
+    },
+    // preValidation:websiteMiddleware,
+    handler:resendVerifyingEmail
+}
 
 
-// const getAllLogsSchema = {
-//   schema: {
-//       response:{
-//           200:{
-//             type: 'object',
-//             properties: {
-//               data:{
-//                 type: 'array',
-//                 item: logObj,
-//               },          
-//               pageNumber: { type: 'integer' },
-//             }
-//           }
-//       }
-//     },
-//     preValidation:adminMiddleware,
-//     handler:getAllLogs
+const resetPasswordSchema = {
+  schema: {
+      body: {
+        type: 'object',
+        required: ['password'],
+        properties:{
+          password : {type:'string'},
+        }
+      },
+      params:{
+        properties:{
+          token:{type:'string'}
+        }
+      },
+      response:200
+    },
+    // preValidation:websiteMiddleware,
+    handler:resetPassword
+}
 
-// }
+
+const sendRequestForNewPasswordSchema = {
+  schema: {
+      body: {
+        type: 'object',
+        required: ['email'],
+        properties:{
+          email : {type:'string'},
+        }
+      },
+      response:200
+    },
+    // preValidation:websiteMiddleware,
+    handler:sendRequestForNewPassword
+}
 
 module.exports = {
     signUpSchema,
     signInSchema,
-    // getOneUserAllLogsSchema,
-    // getAllLogsSchema
+    verifySchema,
+    resendVerifyingEmailSchema,
+    resetPasswordSchema,
+    sendRequestForNewPasswordSchema,
 }

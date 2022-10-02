@@ -29,6 +29,7 @@ model User {
   languageList         Language[]
   conversations        Conversation[]
   token                String
+  changePasswordRequest changePasswordRequest[]
 }
 
 model Freelancer {
@@ -94,6 +95,7 @@ id          Int @id @default(autoincrement())
 ownerId     Int 
 freelancer  Freelancer @relation(fields: [ownerId],references: [id])
 companyName String
+position    String
 country     String
 city        String
 fromDate    DateTime
@@ -193,4 +195,13 @@ conversation    Conversation @relation(fields: [conversationId],references: [id]
 content         String
 senderId        Int
 createdAt   DateTime @default(now())
+}
+
+model changePasswordRequest {
+id          Int @id
+ownerId     Int 
+owner       User @relation(fields: [ownerId],references: [id])
+token       String
+createdAt   DateTime @default(now())
+@@index([id])
 }

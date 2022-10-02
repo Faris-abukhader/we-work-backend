@@ -18,6 +18,13 @@ fastify.get('/', async (request, reply) => {
 
 // routes
 fastify.register(require('./auth/authRoute'),{ prefix : '/auth'})
+fastify.register(require('./freelancer/freelancerRoute'),{ prefix : '/freelancer'})
+fastify.register(require('./employer/employerRoute'),{ prefix : '/employer'})
+fastify.register(require('./language/languageRoute'),{ prefix : '/language'})
+fastify.register(require('./education/educationRoute'),{ prefix : '/education'})
+fastify.register(require('./certification/certificationRoute'),{ prefix : '/certification'})
+fastify.register(require('./employmentHistory/employmentHistoryRoute'),{ prefix : '/employmentHistory'})
+fastify.register(require('./job/jobRoute'),{ prefix : '/job'})
 
 
 const start = async () => {
@@ -42,3 +49,21 @@ const generateWebsiteToken = ()=>{
 
 
 // sendEmail([{email:'faresraed2011@yahoo.com'}],'verify',process.env.API_URL,token='faklhrfkehrjk',`${'fares' + ' ' + 'raed'}`)
+
+
+const createManyJob = async(req,reply)=>{
+  const data = await prisma.employer.update({
+    where:{
+      id:1
+    },
+    data:{
+      jobList:{
+        createMany:{
+          data:fakeData
+        }
+      }
+    }
+  })
+}
+
+// createManyJob()

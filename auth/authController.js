@@ -1,10 +1,10 @@
 const { PrismaClient } = require("@prisma/client")
 const prisma = new PrismaClient()
-const {userRange} = require('../util/paginationRange')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const saltRounds = 10
 const {sendEmail} = require('../util/emailConfig/sendInBlue')
+const {getTargetScript} = require('../util/emailConfig/script')
 
 
 const signUp = async(req,reply)=>{
@@ -26,7 +26,7 @@ const signUp = async(req,reply)=>{
             accountType,
             firstName,
             lastName,
-            token:''
+            token:'',
         }
         let include = {}
 
@@ -90,9 +90,37 @@ const signUp = async(req,reply)=>{
 
 
         // sending email to user to verify his account
-        sendEmail([{email}],'verify',process.env.API_URL,token,`${firstName + ' ' + lastName}`)
+        sendEmail([{email}],getTargetScript('verify').emailTitle,'verify',process.env.API_URL,token,`${firstName + ' ' + lastName}`)
         
         reply.send(newUser)  
+
+    }catch(err){
+        console.log(err)
+        reply.send(err)
+    }
+}
+
+
+const resendVerifyingEmail = async(req,reply)=>{
+    try{
+        const {email} = req.params
+
+        // checking if the email registered in DB
+        const targetUser = await prisma.user.findUnique({
+            where:{
+                email
+            }
+        })
+
+        // sign one token and pass newUserId to it as data
+        const token = jwt.sign({id:targetUser.id},process.env.JWT_SECRET)
+
+
+        // sending verifying emial to target email
+        sendEmail([{email}],getTargetScript('verify').emailTitle,'verify',process.env.API_URL,token,`${targetUser.firstName + ' ' + targetUser.lastName}`)
+
+        reply.send({message:'resendEmailVerifySendSuccessfully'})
+
 
     }catch(err){
         console.log(err)
@@ -151,177 +179,95 @@ const signIn = async(req,reply)=>{
 }
 
 
-
-const staffSignIn = async(req,reply)=>{
-    var errorMessage = ''
-      try{
-        
-        // extracting  the data from request body
-        const {email,password} = req.body
-
-        // checking if the email is exist or not 
-        const targetUser = await prisma.user.findUnique({
-            where:{
-                email,
-            },
-            include:{
-                staff:true,
-                admin:true
-            }
-        })
-
-        console.log(targetUser)
-
-        // deny any inactive account for staff
-        if(targetUser.role=='staff'){
-            if(!targetStaff.staff.verified) throw new Error(`inactive user`)
-        }
-
-        // client user can't login here . . .
-        if(targetUser.role=='client') throw new Error(`Unauthorized user`)
-
-
-        // compare the found user's password with request password
-        const isPasswordCorrect = bcrypt.compareSync(password, targetUser.password);
-
-
-        // if password isn't correct
-        if(!isPasswordCorrect) throw new Error(`Password isn't correct`)
-
-        // assign the target (staff or admin) object to user before we return it
-        let targetStaff = targetUser
-        if(targetStaff.role=='admin'){
-            delete targetStaff.client
-        }else{
-            delete targetStaff.admin
-        }
-        console.log("request no error")
-        console.log(targetStaff)
-        // return the user 
-        reply.send(targetStaff)
-    
-      }catch(err){
-        console.log('***********************')
-        console.log(err.message)
-        console.log('***********************')
-        // user isn't found
-        if(String(err.message).length > 40){
-            errorMessage = 'userIsnotFound'
-        }else{
-            errorMessage = String(err.message)
-        }
-        createNewLog({content:err,topic:'auth/staff/signIn',issuer:'website'})
-        .then(()=>{
-            reply.code(500).send({message:errorMessage}) 
-        })
-      }
-}
-
-
-const verify = (req,reply)=>{
+const verify = async(req,reply)=>{
 
     try{
         // extract the token  from url query string
         const {token} = req.query
 
         // checking the token
-        jwt.verify(token,process.env.JWT_SECRET,async(error,decoded)=>{
+        const targetId = jwt.verify(token,process.env.JWT_SECRET).id
 
-            if(error) reply.send(error)
 
-            // decoded the email from the token
-            let email = decoded.email
-
-            // updating the user and make it verified
-            await prisma.user.update({
-                where:{
-                    email
-                },
-                data:{
-                    isVerified:true,
-                    verifiedDate: new Date()  
-                }
-            })
-
-            // return html page for redirect to target frontend auth page 
-          reply.type('text/html').send(`
-          <div style="width:100%;height:100vh; display:flex; align-items: center;justify-content:center">
-          email verify sucessfully , redirecting the page ...
-          </div>
-          <script>
-          setTimeout(function(){
-            window.location.href = '${process.env.FRONTEND_URL}/auth/signIn'
-        }, 2000); 
-        </script>`)
-
+        // updating the user and make it verified
+        await prisma.user.update({
+            where:{
+                id:targetId
+            },
+            data:{
+                isVerified:true,
+                verifiedDate: new Date()  
+            }
         })
 
-    }catch(err){
-        createNewLog({content:err,topic:'auth/verify',issuer:'website'})
-    }
-    reply.code(500).send({message:"somethingWentWrong"}) 
+        // return html page for redirect to target frontend auth page 
+        reply.type('text/html').send(`
+        <div style="width:100%;height:100vh; display:flex; align-items: center;justify-content:center">
+        email verify sucessfully , redirecting the page ...
+        </div>
+        <script>
+        setTimeout(function(){
+        window.location.href = '${process.env.FRONTEND_URL}/auth/signIn'
+              }, 2000); 
+        </script>`)
 
+    }catch(err){
+        console.log(err)
+        reply.send(err)
+    }
 }
 
 const sendRequestForNewPassword = async(req,reply)=>{
     try{
-        const {expDate,email} = req.body
+        const {email} = req.body
 
         // check if the target email is exist
         const targetUser = await prisma.user.findUnique({
             where:{
                 email
             },
-            include:{
-                client:true
-            }
         })
 
-        let id = Math.floor(Math.random() * 10000)+99 + Number.parseInt( new Date().getTime())
+        let id = Math.floor(Math.random() * 10000)+99
+
+        // generate the token , expired after 1h
+        const token = jwt.sign({userId:targetUser.id,tokenId:id},process.env.JWT_SECRET,{expiresIn: '1h'})
 
 
-        // generate the token 
-        const token = jwt.sign({
-            exp:Math.floor( new Date.now(expDate) / 1000) + (60 * 60),
-            data:{email,id}
-        },process.env.JWT_SECRET)
+        if (targetUser.changePasswordRequest) throw new Error('user already reach the limit to reset password')
 
 
+        // creating reset password request (where each user has only one chance to reset his/her password)
         newResetPasswordRequest = await prisma.changePasswordRequest.create({
             data:{
                 id,
+                owner:{
+                    connect:{
+                        id:targetUser.id
+                    }
+                },
                 token
             }
         })
 
+        // sending reset page to target email
+        sendEmail([{email}],getTargetScript('resetPassword').emailTitle,'resetPassword',process.env.API_URL,token,`${targetUser.firstName + ' ' + targetUser.lastName}`)
 
-        sendEmail({email},getTargetLanguageScript(targetUser.language??'en','resetPassword').emailTitle,'resetPassword',targetUser.language,process.env.API_URL,token,`${targetUser.firstName + ' ' + targetUser.lastName}`)
-
+        // if there is not error we return success statement to user
         reply.send({message:'EmailSendSuccessfully'})
-
-
 
     }catch(err){
         console.log(err)
-        createNewLog({content:err,topic:'auth/sendRequestForNewPassword',issuer:'website'})
+        reply.send(err)
     }
-    reply.code(500).send({message:"somethingWentWrong"}) 
 }
 
 const resetPassword = async(req,reply)=>{
     try{
         const {token} = req.params
         const {password} = req.body
-        const targetEmail = jwt.verify(token,process.env.JWT_SECRET).email
-        const tokenId = jwt.verify(token,process.env.JWT_SECRET).id
-
-
-        // delete the token (one request one token one shoot)
-        await prisma.changePasswordRequest.delete({
-            where:{
-              id:tokenId
-            }
-        })
+        const userId = jwt.verify(token,process.env.JWT_SECRET).userId
+        const tokenId = jwt.verify(token,process.env.JWT_SECRET).tokenId
 
         // hashing the password
         const hash = bcrypt.hashSync(password, saltRounds);
@@ -329,31 +275,27 @@ const resetPassword = async(req,reply)=>{
         // updating the user's password
         const targetUser = await prisma.user.update({
             where:{
-                email:targetEmail
+                id:userId
             },
             data:{
                 password:hash
             },
-            include:{
-                client:true
-            }
         })
 
         reply.send(targetUser)
 
     }catch(err){
         console.log(err)
-        createNewLog({content:err,topic:'auth/resetPassword',issuer:'website'})
+        reply.send(err)
     }
-    reply.code(500).send({message:"somethingWentWrong"}) 
 }
 
 
 module.exports = {
     signUp,
-    staffSignIn,
     signIn,
     verify,
     sendRequestForNewPassword,
     resetPassword,
+    resendVerifyingEmail,
 }

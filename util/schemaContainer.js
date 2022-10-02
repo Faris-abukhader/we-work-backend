@@ -12,6 +12,7 @@ var hiringRequestObj = {}
 var productObj = {}
 var conversationObj = {}
 var messageObj = {}
+var changePasswordRequestObj = {}
 
 userObj = {
     type: 'object',
@@ -31,6 +32,10 @@ userObj = {
         lastUpdate:{type:'string'},
         freelancer:freelancerObj,
         employer:employerObj,
+        changePasswordRequest:{
+            type:'array',
+            items:changePasswordRequestObj
+        },
         languageList:{
             type:'array',
             items:languageObj
@@ -148,6 +153,7 @@ employmentHistoryObj = {
         ownerId:{type:'integer'},
         freelancer:freelancerObj,
         companyName:{type:'string'},
+        position:{type:'string'},
         country:{type:'string'},
         city:{type:'string'},
         fromDate:{type:'string'},
@@ -284,6 +290,18 @@ messageObj = {
 }
 
 
+changePasswordRequestObj = {
+    type: 'object',
+    properties:{
+        id:{type:'integer'},
+        ownerId:{type:'integer'},
+        owner:userObj,
+        token:{type:'string'},
+        createdAt:{type:'string'},
+    }
+}
+
+
 
 module.exports = {
     userObj,
@@ -300,4 +318,5 @@ module.exports = {
     productObj,
     conversationObj,
     messageObj,
+    changePasswordRequestObj
 }
