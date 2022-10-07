@@ -98,6 +98,13 @@ const getAllAvailableJob = async(req,reply)=>{
                 },
                 take:jobRange,
                 skip:toSkip ? (pageNo-1)*jobRange:0, 
+                include:{
+                    _count:{
+                        select:{
+                            proposalList:true
+                        }
+                    }
+                }
             })   
             reply.send({data,pageNumber:Math.ceil(length/jobRange)}) 
         })
@@ -178,10 +185,43 @@ const searchJob = async(req,reply)=>{
           where,
           take:jobRange,
           skip:toSkip ? (pageNo-1)*jobRange:0,
+          include:{
+            _count:{
+                select:{
+                    proposalList:true
+                }
+            }
+        }
           
         })
         reply.send({data,pageNumber:Math.ceil(length/jobRange)})
       })
+    }catch(err){
+        console.log(err)
+        reply.send(err)
+    }
+}
+
+const getOneJob = async(req,reply)=>{
+    try{
+        const {id} = req.params
+        const targetJob = await prisma.job.findUnique({
+            where:{
+                id
+            },
+            include:{
+                proposalList:true,
+                _count:{
+                    select:{
+                        proposalList:true
+                    }
+                }
+            }
+        })
+        console.log(targetJob)
+
+        reply.send(targetJob)
+
     }catch(err){
         console.log(err)
         reply.send(err)
@@ -193,5 +233,6 @@ module.exports = {
     updateOneJob,
     deleteOneJob,
     getAllAvailableJob,
+    getOneJob,
     searchJob
 }

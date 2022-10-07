@@ -183,6 +183,7 @@ jobObj = {
         transaction:transactionObj,
         hiringRequest:hiringRequestObj,
         description:{type:'string'},
+        _count:{}
     }
 }
 
@@ -195,12 +196,13 @@ proposalObj = {
         freelancer:freelancerObj,
         jobId:{type:'integer'},
         job:jobObj,
-        bid:{type:'integer'},
+        bid:{type:'number'},
         timeNeeded:{type:'string'},
         description:{type:'string'},
         createdAt:{type:'string'},
         lastUpdate:{type:'boolean'},
         isAccepted:{type:'boolean'},
+        dateOfAccepting:{type:'string'},
         isDecline:{type:'boolean'},
         jobCategory:{type:'string'},
         reasonOfDecline:{type:'string'},

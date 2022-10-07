@@ -133,6 +133,7 @@ description String
 createdAt   DateTime @default(now())
 lastUpdate  DateTime @updatedAt
 isAccepted  Boolean @default(false)
+dateOfAccepting DateTime?
 isDecline   Boolean @default(false)
 reasonOfDecline String? 
 dateOfDecline DateTime?
@@ -165,6 +166,8 @@ isEmployerAccepet Boolean?
 isFreelancerAccept Boolean?
 productId          Int
 product            Product?
+createdAt   DateTime @default(now())
+lastUpdate  DateTime @updatedAt
 }
 
 

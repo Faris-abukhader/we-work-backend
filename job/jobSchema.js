@@ -3,10 +3,11 @@ const {
   updateOneJob,
   deleteOneJob,
   getAllAvailableJob,
+  getOneJob,
   searchJob
 } =  require('./jobController')
 
-const {jobObj} = require('../util/schemaContainer')
+const {jobObj, proposalObj} = require('../util/schemaContainer')
 // const { adminMiddleware } = require('../preValiadtion/admin')
 // const { staffMiddleware } = require('../preValiadtion/staff')
 
@@ -109,6 +110,24 @@ const getAllAvailableJobSchema = {
 }
 
 
+const getOneJobSchema = {
+  schema: {
+    params: {
+      type: 'object',
+      required:['id'],
+      properties:{
+        id : {type:'integer'},
+      }
+    },
+    response: {
+      200:jobObj
+    },
+  },
+  // preValidation:websiteMiddleware,
+  handler:getOneJob
+}
+
+
 const searchJobSchema = {
   schema: {
     query:{
@@ -149,5 +168,6 @@ module.exports = {
   updateOneJobSchema,
   deleteOneJobSchema,
   getAllAvailableJobSchema,
+  getOneJobSchema,
   searchJobSchema
 }

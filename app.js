@@ -25,6 +25,7 @@ fastify.register(require('./education/educationRoute'),{ prefix : '/education'})
 fastify.register(require('./certification/certificationRoute'),{ prefix : '/certification'})
 fastify.register(require('./employmentHistory/employmentHistoryRoute'),{ prefix : '/employmentHistory'})
 fastify.register(require('./job/jobRoute'),{ prefix : '/job'})
+fastify.register(require('./proposal/proposalRoute'),{ prefix : '/proposal'})
 
 
 const start = async () => {
