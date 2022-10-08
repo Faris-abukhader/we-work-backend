@@ -1,29 +1,20 @@
 const { PrismaClient } = require("@prisma/client")
 const prisma = new PrismaClient()
+const {conversationRange} = require('../util/paginationRange')
 
-
-const createOneEducation = async(req,reply)=>{
+const createOneConversation = async(req,reply)=>{
     try{     
-        const {id} = req.params
-        const {schoolName,dateAttend,dateGraduate,areaOfStudy,degree,description} = req.body      
+        const {users} = req.body      
 
-        const newEducation = await prisma.education.create({
+        const newConversation = await prisma.conversation.create({
             data:{
-                freelancer:{
-                    connect:{
-                        userId:id
-                    }
-                },
-                schoolName,
-                dateAttend:new Date(dateAttend),
-                dateGraduate:new Date(dateGraduate),
-                areaOfStudy,
-                degree,
-                description
+                users:{
+                    connect:users.map((item)=>({id:item.id}))
+                }
             },
         })
 
-        reply.send(newEducation)
+        reply.send(newConversation)
       
     }catch(err){
         console.log(err)
@@ -31,45 +22,17 @@ const createOneEducation = async(req,reply)=>{
     }
 }
 
-
-const updateOneEducation = async(req,reply)=>{
-    try{     
-        const {id,schoolName,dateAttend,dateGraduate,areaOfStudy,degree,description} = req.body
-
-        const targetEducation = await prisma.education.update({
-            where:{
-              id
-            },
-            data:{
-                schoolName,
-                dateAttend:new Date(dateAttend),
-                dateGraduate:new Date(dateGraduate),
-                areaOfStudy,
-                degree,
-                description
-            },
-        })
-
-        reply.send(targetEducation)
-      
-    }catch(err){
-        console.log(err)
-        reply.send(err)
-    }
-}
-
-
-const deleteOneEductaion = async(req,reply)=>{
+const deleteOneConversation = async(req,reply)=>{
     try{
         const {id} = req.params
 
-        const targetEducation = await prisma.education.delete({
+        const targetConversation = await prisma.conversation.delete({
             where:{
                 id
             },
         })
 
-        reply.send(targetEducation)
+        reply.send(targetConversation)
 
     }catch(err){
         console.log(err)
@@ -77,8 +40,91 @@ const deleteOneEductaion = async(req,reply)=>{
     }
 }
 
+
+const getOneUserConversations = async(req,reply)=>{
+    try{
+        const {id} = req.params
+
+        let pageNo = 0
+        let toSkip = false
+        if(req.params.pageNumber){
+          pageNo = req.params.pageNumber
+          toSkip = true
+        }
+    
+        await prisma.conversation.count({
+            where:{
+                users:{
+                    some:{
+                        id
+                    }
+                }
+            }
+        }).then(async(length)=>{
+            const data = await prisma.conversation.findMany({
+                where:{
+                    users:{
+                        some:{
+                            id
+                        }
+                    }
+                },
+                take:conversationRange,
+                skip:toSkip ? (pageNo-1)*conversationRange:0, 
+                include:{
+                    messages:{
+                        take:1,
+                        orderBy:{
+                            createdAt:'desc'
+                        }
+                    }
+                }
+            })   
+            reply.send({data,pageNumber:Math.ceil(length/conversationRange)}) 
+        })
+
+    }catch(err){
+        console.log(err)
+        reply.send(err)
+    }
+}
+
+const getOneConversationAllMessages = async(req,reply)=>{
+    try{
+        const {id} = req.params
+
+        const messages = await prisma.conversation.findUnique({
+            where:{
+                id
+            },
+            select:{
+                id:true,
+                createdAt:true,
+                users:{
+                    select:{
+                        firstName:true,
+                        lastName:true,
+                        avatar:true
+                    }
+                },
+                messages:{
+                    orderBy:{
+                        createdAt:'desc'
+                    }
+                }
+            }
+        })   
+        console.log(messages)
+        reply.send(messages) 
+    }catch(err){
+        console.log(err)
+        reply.send(err)  
+    }
+}
+
 module.exports = {
-    createOneEducation,
-    updateOneEducation,
-    deleteOneEductaion
+    createOneConversation,
+    deleteOneConversation,
+    getOneUserConversations,
+    getOneConversationAllMessages
 }

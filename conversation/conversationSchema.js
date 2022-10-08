@@ -1,10 +1,11 @@
 const {
-  createOneEducation,
-  updateOneEducation,
-  deleteOneEductaion
+  createOneConversation,
+  deleteOneConversation,
+  getOneUserConversations,
+  getOneConversationAllMessages
 } =  require('./conversationController')
 
-const {conversationObj} = require('../util/schemaContainer')
+const {conversationObj, userObj, messageObj} = require('../util/schemaContainer')
 // const { adminMiddleware } = require('../preValiadtion/admin')
 // const { staffMiddleware } = require('../preValiadtion/staff')
 
@@ -13,26 +14,23 @@ const {conversationObj} = require('../util/schemaContainer')
 // } = require('../preValiadtion/website')
 
 
-const createOneEducationSchema = {
+const createOneConversationSchema = {
     schema: {
       tags:['conversation'],
-        params: {
-          type: 'object',
-          required: ['id'],
-          properties:{
-            id : {type:'integer'},
-          }
-        },
         body:{
           type:'object',
-          required:['schoolName','dateAttend','dateGraduate','areaOfStudy','degree'],
+          required:['users'],
           properties:{
-            schoolName:{type:'string'},
-            dateAttend:{type:'string'},
-            dateGraduate:{type:'string'},
-            areaOfStudy:{type:'string'},
-            degree:{type:'string'},
-            description:{type:'string'},
+            users:{
+              type:'array',
+              items:{
+                type:'object',
+                required:['id'],
+                properties:{
+                  id:{type:'integer'}
+                }
+              }
+            },
           }
         },
         response:{
@@ -40,35 +38,10 @@ const createOneEducationSchema = {
         }
       },
       // preValidation:websiteMiddleware,
-      handler:createOneEducation
+      handler:createOneConversation
 }
 
-
-const updateOneEducationSchema = {
-  schema: {
-    tags:['conversation'],
-    body:{
-      type:'object',
-      required:['id','schoolName','dateAttend','dateGraduate','areaOfStudy','degree'],
-      properties:{
-        id:{type:'integer'},
-        schoolName:{type:'string'},
-        dateAttend:{type:'string'},
-        dateGraduate:{type:'string'},
-        areaOfStudy:{type:'string'},
-        degree:{type:'string'},
-        description:{type:'string'},
-      }
-    },
-    response:{
-        200:conversationObj
-    }
-  },
-  // preValidation:websiteMiddleware,
-  handler:updateOneEducation
-}
-
-const deleteOneEductaionSchema = {
+const deleteOneConversationSchema = {
   schema: {
     tags:['conversation'],
     params: {
@@ -83,12 +56,59 @@ const deleteOneEductaionSchema = {
     }
   },
   // preValidation:websiteMiddleware,
-  handler:deleteOneEductaion
+  handler:deleteOneConversation
+}
+
+const getOneConversationAllMessagesSchema = {
+  schema: {
+    tags:['conversation'],
+    params: {
+      type: 'object',
+      required: ['id'],
+      properties:{
+        id : {type:'integer'},
+      }
+    },
+    response:{
+      200:conversationObj
+    }
+  },
+  // preValidation:websiteMiddleware,
+  handler:getOneConversationAllMessages
+}
+
+
+const getOneUserAllConversationSchema = {
+  schema: {
+    tags:['conversation'],
+    params: {
+      type: 'object',
+      required: ['id'],
+      properties:{
+        id : {type:'integer'},
+      }
+    },
+    response:{
+        200:{
+          type:'object',
+          properties:{
+           data:{
+            type:'array',
+            items:conversationObj
+           },
+           pageNumber:{type:'integer'}
+          }
+        }
+    }
+  },
+  // preValidation:websiteMiddleware,
+  handler:getOneUserConversations
 }
 
 
 module.exports = {
-  createOneEducationSchema,
-  updateOneEducationSchema,
-  deleteOneEductaionSchema,
+  createOneConversationSchema,
+  deleteOneConversationSchema,
+  getOneConversationAllMessagesSchema,
+  getOneUserAllConversationSchema
 }

@@ -1,16 +1,19 @@
 const {
-  createOneEducationSchema,
-  updateOneEducationSchema,
-  deleteOneEductaionSchema,
+  createOneConversationSchema,
+  deleteOneConversationSchema,
+  getOneConversationAllMessagesSchema,
+  getOneUserAllConversationSchema
 } = require('./conversationSchema')
 
 const conversationRoutes = async(fastify, options, done)=> {
   
-    fastify.post('/', createOneEducationSchema)
+    fastify.post('/', createOneConversationSchema)
 
-    fastify.put('/:userId',updateOneEducationSchema)
+    fastify.delete('/:id',deleteOneConversationSchema)
 
-    fastify.delete('/:id',deleteOneEductaionSchema)
+    fastify.get('/user/:id',getOneUserAllConversationSchema)
+
+    fastify.get('/messages/:id',getOneConversationAllMessagesSchema)
     
 }
   

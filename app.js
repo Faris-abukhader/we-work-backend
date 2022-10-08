@@ -28,6 +28,7 @@ fastify.register(require('./proposal/proposalRoute'),{ prefix : '/proposal'})
 fastify.register(require('./hiringRequest/hiringRequestRoute'),{ prefix : '/hiringRequest'})
 fastify.register(require('./product/productRoute'),{ prefix : '/product'})
 fastify.register(require('./conversation/conversationRoute'),{ prefix : '/conversation'})
+fastify.register(require('./message/messageRoute'),{ prefix : '/message'})
 
 
 const start = async () => {
