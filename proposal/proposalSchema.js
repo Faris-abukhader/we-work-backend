@@ -19,6 +19,7 @@ const {proposalObj} = require('../util/schemaContainer')
 
 const createOneProposalSchema = {
     schema: {
+      tags:['proposal'],
         body:{
           type:'object',
           required:['ownerId','jobId','bid','timeNeeded','description'],
@@ -41,6 +42,7 @@ const createOneProposalSchema = {
 
 const updateOneProposalSchema = {
   schema: {
+    tags:['proposal'],
     params: {
       type: 'object',
       required: ['id'],
@@ -67,6 +69,7 @@ const updateOneProposalSchema = {
 
 const deleteOneProposalSchema = {
   schema: {
+    tags:['proposal'],
     params: {
       type: 'object',
       required: ['id'],
@@ -84,6 +87,7 @@ const deleteOneProposalSchema = {
 
 const getOneJobAllProposalsSchema = {
   schema: {
+    tags:['proposal'],
     params: {
       type: 'object',
       required: ['id'],
@@ -111,6 +115,7 @@ const getOneJobAllProposalsSchema = {
 
 const getOneProposalSchema = {
   schema: {
+    tags:['proposal'],
     params: {
       type: 'object',
       required: ['id'],
@@ -128,6 +133,7 @@ const getOneProposalSchema = {
 
 const acceptOneProposalSchema = {
   schema: {
+    tags:['proposal'],
     params: {
       type: 'object',
       required: ['id'],
@@ -145,6 +151,7 @@ const acceptOneProposalSchema = {
 
 const declineOneProposalSchema = {
   schema: {
+    tags:['proposal'],
     params: {
       type: 'object',
       required: ['id'],

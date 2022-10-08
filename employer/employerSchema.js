@@ -14,6 +14,7 @@ const {userObj} = require('../util/schemaContainer')
 
 const getOneEmployerByEmailSchema = {
     schema: {
+      tags:['employer'],
         params: {
           type: 'object',
           required: ['email'],
@@ -32,6 +33,7 @@ const getOneEmployerByEmailSchema = {
 
 const updateEmployerInfoSchema = {
   schema: {
+    tags:['employer'],
       params: {
         type: 'object',
         required: ['id'],

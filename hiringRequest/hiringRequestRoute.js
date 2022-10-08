@@ -18,11 +18,11 @@ const hiringRequestRoutes = async(fastify, options, done)=> {
 
     fastify.delete('/:id',deleteOneRequestSchema)
 
-    fastify.get('/freelancer/all',getFreelancerAllHriringRequestlSchema)
+    fastify.get('/freelancer/all/:id',getFreelancerAllHriringRequestlSchema)
 
-    fastify.get('/employer/all',getEmployerAllHriringRequestlSchema)
+    fastify.get('/employer/all/:id',getEmployerAllHriringRequestlSchema)
 
-    fastify.get('/job/all',getOneJobAllHriringRequestlSchema)
+    fastify.get('/job/all/:id',getOneJobAllHriringRequestlSchema)
     
 }
   

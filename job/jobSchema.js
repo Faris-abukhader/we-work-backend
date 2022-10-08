@@ -17,6 +17,7 @@ const {jobObj, proposalObj} = require('../util/schemaContainer')
 
 const createOneJobSchema = {
     schema: {
+      tags:['job'],
         params: {
           type: 'object',
           required: ['id'],
@@ -47,6 +48,7 @@ const createOneJobSchema = {
 
 const updateOneJobSchema = {
   schema: {
+    tags:['job'],
     body:{
       type:'object',
       required:['title','location','description','price','skillRequired','jobCategory'],
@@ -69,6 +71,7 @@ const updateOneJobSchema = {
 
 const deleteOneJobSchema = {
   schema: {
+    tags:['job'],
     params: {
       type: 'object',
       required: ['id'],
@@ -86,6 +89,7 @@ const deleteOneJobSchema = {
 
 const getAllAvailableJobSchema = {
   schema: {
+    tags:['job'],
     params: {
       type: 'object',
       properties:{
@@ -112,6 +116,7 @@ const getAllAvailableJobSchema = {
 
 const getOneJobSchema = {
   schema: {
+    tags:['job'],
     params: {
       type: 'object',
       required:['id'],
@@ -130,6 +135,7 @@ const getOneJobSchema = {
 
 const searchJobSchema = {
   schema: {
+    tags:['job'],
     query:{
       type: 'object',
       required:['name'],

@@ -14,6 +14,7 @@ const {languageObj} = require('../util/schemaContainer')
 
 const createOneListOfLanguagesSchema = {
     schema: {
+      tags:['language'],
         params: {
           type: 'object',
           required: ['id'],
@@ -44,6 +45,7 @@ const createOneListOfLanguagesSchema = {
 
 const updateUserLanguageListSchema = {
   schema: {
+    tags:['language'],
     params: {
       type: 'object',
       required: ['id'],

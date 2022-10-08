@@ -18,6 +18,7 @@ const {userObj} = require('../util/schemaContainer')
 
 const signUpSchema = {
     schema: {
+      tags: ['auth'],
         body: {
           type: 'object',
           required: ['email','password','firstName','lastName','accountType'],
@@ -41,6 +42,7 @@ const signUpSchema = {
 
 const signInSchema = {
   schema: {
+    tags: ['auth'],
       body: {
         type: 'object',
         required: ['email','password'],
@@ -60,6 +62,7 @@ const signInSchema = {
 
 const verifySchema = {
   schema: {
+    tags: ['auth'],
       response:200
     },
     // preValidation:websiteMiddleware,
@@ -69,6 +72,7 @@ const verifySchema = {
 
 const resendVerifyingEmailSchema = {
   schema: {
+    tags: ['auth'],
       params: {
         type: 'object',
         required: ['email'],
@@ -89,6 +93,7 @@ const resendVerifyingEmailSchema = {
 
 const resetPasswordSchema = {
   schema: {
+    tags: ['auth'],
       body: {
         type: 'object',
         required: ['password'],
@@ -110,6 +115,7 @@ const resetPasswordSchema = {
 
 const sendRequestForNewPasswordSchema = {
   schema: {
+    tags: ['auth'],
       body: {
         type: 'object',
         required: ['email'],

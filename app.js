@@ -5,16 +5,15 @@ const prisma = new PrismaClient()
 const Fastify = require('fastify')
 const PORT = process.env.PORT || 4500
 const jwt = require('jsonwebtoken')
-const fastify = Fastify({
-  logger: true
-})
+const fastify = Fastify({logger: true})
+const {docOptions} = require('./util/docGenerator')
 const {sendEmail} = require('./util/emailConfig/sendInBlue')
 
 
-fastify.get('/', async (request, reply) => {
-    return { hello: 'world' }
-  })
-
+const buildUpDocs = async(options)=>{
+    await fastify.register(require('@fastify/swagger'), options)
+}
+buildUpDocs(docOptions)
 
 // routes
 fastify.register(require('./auth/authRoute'),{ prefix : '/auth'})
@@ -26,6 +25,9 @@ fastify.register(require('./certification/certificationRoute'),{ prefix : '/cert
 fastify.register(require('./employmentHistory/employmentHistoryRoute'),{ prefix : '/employmentHistory'})
 fastify.register(require('./job/jobRoute'),{ prefix : '/job'})
 fastify.register(require('./proposal/proposalRoute'),{ prefix : '/proposal'})
+fastify.register(require('./hiringRequest/hiringRequestRoute'),{ prefix : '/hiringRequest'})
+fastify.register(require('./product/productRoute'),{ prefix : '/product'})
+fastify.register(require('./conversation/conversationRoute'),{ prefix : '/conversation'})
 
 
 const start = async () => {

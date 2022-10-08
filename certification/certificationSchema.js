@@ -15,6 +15,7 @@ const {certificationObj} = require('../util/schemaContainer')
 
 const createOneCertificationSchema = {
     schema: {
+      tags:['certification'],
         params: {
           type: 'object',
           required: ['id'],
@@ -43,6 +44,7 @@ const createOneCertificationSchema = {
 
 const updateOneCertificationSchema = {
   schema: {
+    tags:['certification'],
     body:{
       type:'object',
       required:['id','fromWhere','issuedDate','name'],
@@ -64,6 +66,7 @@ const updateOneCertificationSchema = {
 
 const deleteOneCertificationSchema = {
   schema: {
+    tags:['certification'],
     params: {
       type: 'object',
       required: ['id'],

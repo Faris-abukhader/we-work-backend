@@ -14,6 +14,7 @@ const {userObj} = require('../util/schemaContainer')
 
 const getOneFreelancerByEmailSchema = {
     schema: {
+      tags:['freelancer'],
         params: {
           type: 'object',
           required: ['email'],
@@ -32,6 +33,7 @@ const getOneFreelancerByEmailSchema = {
 
 const updateFreelancerInfoSchema = {
   schema: {
+    tags:['freelancer'],
       params: {
         type: 'object',
         required: ['id'],

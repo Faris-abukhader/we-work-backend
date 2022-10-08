@@ -164,7 +164,7 @@ ownerNote    String?
 freelancerNote String?
 isEmployerAccepet Boolean?
 isFreelancerAccept Boolean?
-productId          Int
+productId          Int?
 product            Product?
 createdAt   DateTime @default(now())
 lastUpdate  DateTime @updatedAt

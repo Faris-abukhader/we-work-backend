@@ -19,6 +19,7 @@ const {hiringRequestObj} = require('../util/schemaContainer')
 
 const createOneRequestSchema = {
     schema: {
+      tags:['hiring Request'],
         body:{
           type:'object',
           required:['ownerId','freelancerId','jobId','ownerNote'],
@@ -40,6 +41,7 @@ const createOneRequestSchema = {
 
 const updateOneRequestSchema = {
   schema: {
+    tags:['hiring Request'],
     params: {
       type: 'object',
       required: ['id'],
@@ -51,8 +53,8 @@ const updateOneRequestSchema = {
       type:'object',
       required:['ownerNote','isEmployerAccepet'],
       properties:{
-        ownerNote:{type:'number'},
-        isEmployerAccepet:{type:'string'},
+        ownerNote:{type:'string'},
+        isEmployerAccepet:{type:'boolean'},
       }
     },
       response:{
@@ -65,6 +67,7 @@ const updateOneRequestSchema = {
 
 const deleteOneRequestSchema = {
   schema: {
+    tags:['hiring Request'],
     params: {
       type: 'object',
       required: ['id'],
@@ -82,6 +85,7 @@ const deleteOneRequestSchema = {
 
 const freelancerAcceptingRequestSchema = {
   schema: {
+    tags:['hiring Request'],
     params: {
       type: 'object',
       required: ['id'],
@@ -107,6 +111,7 @@ const freelancerAcceptingRequestSchema = {
 
 const getFreelancerAllHriringRequestlSchema = {
   schema: {
+    tags:['hiring Request'],
     params: {
       type: 'object',
       required: ['id'],
@@ -134,6 +139,7 @@ const getFreelancerAllHriringRequestlSchema = {
 
 const getEmployerAllHriringRequestlSchema = {
   schema: {
+    tags:['hiring Request'],
     params: {
       type: 'object',
       required: ['id'],
@@ -161,6 +167,7 @@ const getEmployerAllHriringRequestlSchema = {
 
 const getOneJobAllHriringRequestlSchema = {
   schema: {
+    tags:['hiring Request'],
     params: {
       type: 'object',
       required: ['id'],

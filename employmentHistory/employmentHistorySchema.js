@@ -15,6 +15,7 @@ const {employmentHistoryObj} = require('../util/schemaContainer')
 
 const createOneEmploymentHistorySchema = {
     schema: {
+      tags:['employment History'],
         params: {
           type: 'object',
           required: ['id'],
@@ -46,6 +47,7 @@ const createOneEmploymentHistorySchema = {
 
 const updateOneEmploymentHistorySchema = {
   schema: {
+    tags:['employment History'],
     body:{
       type: 'object',
       required: ['id','companyName','country','position','city','fromDate','untilDate'],
@@ -71,6 +73,7 @@ const updateOneEmploymentHistorySchema = {
 
 const deleteOneEmploymentHistorySchema = {
   schema: {
+    tags:['employment History'],
     params:{
       type: 'object',
       required: ['id'],

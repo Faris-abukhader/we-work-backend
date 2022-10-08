@@ -2,9 +2,9 @@ const {
   createOneEducation,
   updateOneEducation,
   deleteOneEductaion
-} =  require('./educationController')
+} =  require('./conversationController')
 
-const {educationObj} = require('../util/schemaContainer')
+const {conversationObj} = require('../util/schemaContainer')
 // const { adminMiddleware } = require('../preValiadtion/admin')
 // const { staffMiddleware } = require('../preValiadtion/staff')
 
@@ -15,7 +15,7 @@ const {educationObj} = require('../util/schemaContainer')
 
 const createOneEducationSchema = {
     schema: {
-      tags:['education'],
+      tags:['conversation'],
         params: {
           type: 'object',
           required: ['id'],
@@ -36,7 +36,7 @@ const createOneEducationSchema = {
           }
         },
         response:{
-            200:educationObj
+            200:conversationObj
         }
       },
       // preValidation:websiteMiddleware,
@@ -46,7 +46,7 @@ const createOneEducationSchema = {
 
 const updateOneEducationSchema = {
   schema: {
-    tags:['education'],
+    tags:['conversation'],
     body:{
       type:'object',
       required:['id','schoolName','dateAttend','dateGraduate','areaOfStudy','degree'],
@@ -61,7 +61,7 @@ const updateOneEducationSchema = {
       }
     },
     response:{
-        200:educationObj
+        200:conversationObj
     }
   },
   // preValidation:websiteMiddleware,
@@ -70,7 +70,7 @@ const updateOneEducationSchema = {
 
 const deleteOneEductaionSchema = {
   schema: {
-    tags:['education'],
+    tags:['conversation'],
     params: {
       type: 'object',
       required: ['id'],
@@ -79,7 +79,7 @@ const deleteOneEductaionSchema = {
       }
     },
     response:{
-        200:educationObj
+        200:conversationObj
     }
   },
   // preValidation:websiteMiddleware,
