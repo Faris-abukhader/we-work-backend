@@ -9,7 +9,7 @@
 
 - [Introduction](#-packages)
 - [Installation](#--installation)
-- [Development setup](#-features)
+- [Development setup](#--development-setup)
 - [Project structure](#project-structure)
 - [Features](#-browser-support)
 - [Packages](#-packages)
@@ -62,6 +62,35 @@ Download the windows installer from [NodeJs offical website](https://nodejs.org/
 brew install node
 ```
 - You can download NodeJs mac version through [the offical website](https://nodejs.org/en/download/)
+<br/>
+<hr/>
+
+
+
+## <img src="https://cdn-icons-png.flaticon.com/512/814/814848.png" width="25" height="25" style="padding-right:15px">  Development setup
+
+
+
+### 🔘 Downloading the packages
+
+Go to project direct where  <package.json> is exist and type in terminal :
+```
+npm install 
+```
+Now you need to create DB server connection , after you create it , create .gitignore file and type :
+```
+# Prisma supports the native connection string format for PostgreSQL, MySQL, SQLite, SQL Server, MongoDB and CockroachDB.
+# See the documentation for all the connection string options: https://pris.ly/d/connection-strings
+
+DATABASE_URL="mysql://<USERNAME>:<YOUR_PASSWORD>@localhost:3306/<DB_NAME>?schema=public"
+
+```
+Now you need to step up Prisma ORM , type in your terminal :
+```
+cd prisma 
+prisma generate
+```
+
 
 
 
