@@ -10,7 +10,7 @@
 - [Introduction](#--introduction)
 - [Installation](#--installation)
 - [Development setup](#--development-setup)
-- [Project structure](#project-structure)
+- [Project structure](#--project-structure)
 - [Packages](#-packages)
 - [License](#-license)
 
@@ -208,4 +208,4 @@ npm run dev
 
 ## 📜 License
 
-This software is licensed under the [MIT](https://github.com/nhn/tui.editor/blob/master/LICENSE) © [NHN Cloud](https://github.com/nhn).
+This software is licensed under the [MIT](https://github.com/nhn/tui.editor/blob/master/LICENSE) © [FaRiS](https://github.com/Faris-abukhader).
