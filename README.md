@@ -10,7 +10,7 @@
 - [Introduction](#-packages)
 - [Installation](#--installation)
 - [Development setup](#-features)
-- [Project structure](#-project-structure)
+- [Project structure](#project-structure)
 - [Features](#-browser-support)
 - [Packages](#-packages)
 - [Used By](#-used-by)
@@ -23,6 +23,48 @@
 
 
 ## <img src="https://cdn-icons-png.flaticon.com/512/814/814848.png" width="25" height="25" style="padding-right:15px">  Installation 
+
+
+### 🔘 Cloning repository
+1. On GitHub.com, navigate to the main page of the repository.
+2. Above the list of files, click  Code.
+3. Copy the URL for the repository.
+4. Open Terminal.
+5. Change the current working directory to the location where you want the cloned directory.
+6. Type git clone, and then paste the URL you copied earlier.
+```
+git clone github.com/Faris-abukhader/we-work-backend
+```
+Press Enter to create your local clone
+```
+git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
+> Cloning into `we-work-backend`...
+> remote: Counting objects: 10, done.
+> remote: Compressing objects: 100% (8/8), done.
+> remove: Total 10 (delta 1), reused 10 (delta 1)
+> Unpacking objects: 100% (10/10), done.
+```
+<hr/>
+<br/>
+
+### 🔘 Downloading Node
+
+> for Windows  
+
+
+Download the windows installer from [NodeJs offical website](https://nodejs.org/en/download/) make sure you have download the latest version of NodeJs.
+<br/>
+
+
+> for Mac
+- You can download NodeJs using brew CLI
+```
+brew install node
+```
+- You can download NodeJs mac version through [the offical website](https://nodejs.org/en/download/)
+
+
+
 
 
 
