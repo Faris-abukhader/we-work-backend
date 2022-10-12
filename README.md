@@ -8,15 +8,24 @@
 ## 🚩 Table of Contents
 
 - [Introduction](#-packages)
-- [Installation](#-why-toast-ui-editor)
+- [Installation](#--installation)
 - [Development setup](#-features)
-- [Project structure](#-examples)
+- [Project structure](#-project-structure)
 - [Features](#-browser-support)
-- [Packages](#-pull-request-steps)
+- [Packages](#-packages)
 - [Used By](#-used-by)
 - [License](#-license)
 
+
+
+
 ## <img src="https://cdn-icons-png.flaticon.com/512/1436/1436664.png" width="25" height="25" style="padding-right:15px">  Introduction 
+
+
+## <img src="https://cdn-icons-png.flaticon.com/512/814/814848.png" width="25" height="25" style="padding-right:15px">  Installation 
+
+
+
 ## 📦 Packages
 
 
@@ -34,24 +43,6 @@
 | [`nodemailer`](https://github.com/nodemailer/nodemailer) | Easy as cake e-mail sending from your Node.js applications |
 | [`nodemon`](https://github.com/remy/nodemon) | Simple monitor script for use during development of a Node.js app |
 | [`sib-api-v3-sdk`](https://www.npmjs.com/package/sib-api-v3-sdk) | SendinBlue's API v3 Node.js Library |
-
-
-### TOAST UI Editor's Wrappers
-
-| Name | Description |
-| --- | --- |
-| [`@toast-ui/react-editor`](https://github.com/nhn/tui.editor/tree/master/apps/react-editor) | [React](https://reactjs.org/) wrapper component |
-| [`@toast-ui/vue-editor`](https://github.com/nhn/tui.editor/tree/master/apps/vue-editor) | [Vue](https://vuejs.org/) wrapper component |
-
-### TOAST UI Editor's Plugins
-
-| Name | Description |
-| --- | --- |
-| [`@toast-ui/editor-plugin-chart`](https://github.com/nhn/tui.editor/tree/master/plugins/chart) | Plugin to render chart |
-| [`@toast-ui/editor-plugin-code-syntax-highlight`](https://github.com/nhn/tui.editor/tree/master/plugins/code-syntax-highlight) | Plugin to highlight code syntax |
-| [`@toast-ui/editor-plugin-color-syntax`](https://github.com/nhn/tui.editor/tree/master/plugins/color-syntax) | Plugin to color editing text |
-| [`@toast-ui/editor-plugin-table-merged-cell`](https://github.com/nhn/tui.editor/tree/master/plugins/table-merged-cell) | Plugin to merge table columns |
-| [`@toast-ui/editor-plugin-uml`](https://github.com/nhn/tui.editor/tree/master/plugins/uml) | Plugin to render UML |
 
 
 ## 🤖 Why TOAST UI Editor?
@@ -127,10 +118,6 @@ Here are more [examples](https://nhn.github.io/tui.editor/latest/tutorial-exampl
 | Yes | 11+ | Yes | Yes | Yes |
 
 
-## 🔧 Pull Request Steps
-
-TOAST UI products are open source, so you can create a pull request(PR) after you fix issues. Run npm scripts and develop yourself with the following process.
-
 ### Setup
 
 Fork `main` branch into your personal repository. Clone it to local computer. Install node modules. Before starting development, you should check if there are any errors.
@@ -174,28 +161,89 @@ Before uploading your PR, run test one last time to check if there are any error
 
 For more information on PR's steps, please see links in the Contributing section.
 
-## 💬 Contributing
+## <img src="https://cdn-icons-png.flaticon.com/512/535/535471.png" width="25" height="25" style="padding-right:15px">Project structure  
 
-* [Code of Conduct](https://github.com/nhn/tui.editor/blob/master/CODE_OF_CONDUCT.md)
-* [Contributing Guideline](https://github.com/nhn/tui.editor/blob/master/CONTRIBUTING.md)
-* [Commit Convention](https://github.com/nhn/tui.editor/blob/master/docs/COMMIT_MESSAGE_CONVENTION.md)
-* [Issue Guidelines](https://github.com/nhn/tui.editor/tree/master/.github/ISSUE_TEMPLATE)
-
-
-## 🍞 TOAST UI Family
-
-- [TOAST UI Calendar](https://github.com/nhn/tui.calendar)
-- [TOAST UI Chart](https://github.com/nhn/tui.chart)
-- [TOAST UI Grid](https://github.com/nhn/tui.grid)
-- [TOAST UI Image Editor](https://github.com/nhn/tui.image-editor)
-- [TOAST UI Components](https://github.com/nhn)
-
-
-## 🚀 Used By
-
-* [NHN Dooray! - Collaboration Service (Project, Messenger, Mail, Calendar, Drive, Wiki, Contacts)](https://dooray.com)
-* [UNOTES - Visual Studio Code Extension](https://marketplace.visualstudio.com/items?itemName=ryanmcalister.Unotes)
-
+```
+📦WeWork-backend
+ ┣ 📂auth
+ ┃ ┣ 📜authController.js
+ ┃ ┣ 📜authRoute.js
+ ┃ ┗ 📜authSchema.js
+ ┣ 📂certification
+ ┃ ┣ 📜certificationController.js
+ ┃ ┣ 📜certificationRoute.js
+ ┃ ┗ 📜certificationSchema.js
+ ┣ 📂conversation
+ ┃ ┣ 📜conversationController.js
+ ┃ ┣ 📜conversationRoute.js
+ ┃ ┗ 📜conversationSchema.js
+ ┣ 📂education
+ ┃ ┣ 📜educationController.js
+ ┃ ┣ 📜educationRoute.js
+ ┃ ┗ 📜educationSchema.js
+ ┣ 📂employer
+ ┃ ┣ 📜employerController.js
+ ┃ ┣ 📜employerRoute.js
+ ┃ ┗ 📜employerSchema.js
+ ┣ 📂employmentHistory
+ ┃ ┣ 📜employmentHistoryController.js
+ ┃ ┣ 📜employmentHistoryRoute.js
+ ┃ ┗ 📜employmentHistorySchema.js
+ ┣ 📂freelancer
+ ┃ ┣ 📜freelancerController.js
+ ┃ ┣ 📜freelancerRoute.js
+ ┃ ┗ 📜freelancerSchema.js
+ ┣ 📂hiringRequest
+ ┃ ┣ 📜hiringRequestController.js
+ ┃ ┣ 📜hiringRequestRoute.js
+ ┃ ┗ 📜hiringRequestSchema.js
+ ┣ 📂job
+ ┃ ┣ 📜jobController.js
+ ┃ ┣ 📜jobRoute.js
+ ┃ ┗ 📜jobSchema.js
+ ┣ 📂language
+ ┃ ┣ 📜languageController.js
+ ┃ ┣ 📜languageRoute.js
+ ┃ ┗ 📜languageSchema.js
+ ┣ 📂message
+ ┃ ┣ 📜messageController.js
+ ┃ ┣ 📜messageRoute.js
+ ┃ ┗ 📜messageSchema.js
+  ┣ 📂preValidation
+ ┃ ┣ 📜employerMiddleware.js
+ ┃ ┣ 📜freelancerMiddleware.js
+ ┃ ┗ 📜websiteMiddleware.js
+ ┣ 📂prisma
+ ┃ ┣ 📂migrations
+ ┃ ┃ ┣ 📂20220928063002_init
+ ┃ ┃ ┃ ┗ 📜migration.sql
+ ┃ ┃ ┗ 📜migration_lock.toml
+ ┃ ┗ 📜schema.prisma
+ ┣ 📂product
+ ┃ ┣ 📜productController.js
+ ┃ ┣ 📜productRoute.js
+ ┃ ┗ 📜productSchema.js
+ ┣ 📂proposal
+ ┃ ┣ 📜proposalController.js
+ ┃ ┣ 📜proposalRoute.js
+ ┃ ┗ 📜proposalSchema.js
+ ┣ 📂util
+ ┃ ┣ 📂emailConfig
+ ┃ ┃ ┣ 📂templates
+ ┃ ┃ ┃ ┣ 📜.DS_Store
+ ┃ ┃ ┃ ┣ 📜resetPassword.html
+ ┃ ┃ ┃ ┗ 📜verify.html
+ ┃ ┃ ┣ 📜emailConfig.js
+ ┃ ┃ ┣ 📜script.js
+ ┃ ┃ ┗ 📜sendInBlue.js
+ ┃ ┣ 📜docGenerator.js
+ ┃ ┣ 📜paginationRange.js
+ ┃ ┗ 📜schemaContainer.js
+ ┣ 📜.gitignore
+ ┣ 📜app.js
+ ┣ 📜package-lock.json
+ ┗ 📜package.json
+```
 
 ## 📜 License
 
