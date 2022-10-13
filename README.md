@@ -32,6 +32,7 @@ This API gonna cover the authentication part , which includes SignIn, JWT , Sign
 In this API under user we have two accounts type , first is freelancer second is employer .
 </br>
 Employers can publish there own jobs , then freelancer can provides there proposals , employers can accept or decline the proposals , once proposal is accepted one recruiting request gonna be send to freelancer , if both side accept the request the job goona be closed ; also the employer can send request to specific freelancer direclty without waiting for proposal.
+</br>
 Employer can rate freelancer for each job , and from here freelancer gonna get his average rate.
 WeWork API also provide Conversation route where users can be in touch through messages between them.
 </br>
