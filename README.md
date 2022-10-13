@@ -14,6 +14,7 @@
 - [Installation](#--installation)
 - [Development setup](#--development-setup)
 - [Project structure](#--project-structure)
+- [Features](#--features)
 - [Packages](#-packages)
 - [License](#-license)
 
@@ -21,6 +22,20 @@
 
 
 ## <img src="https://cdn-icons-png.flaticon.com/512/1436/1436664.png" width="25" height="25" style="padding-right:15px">  Introduction 
+
+<p>
+WeWork is an open source freelancing platform , where is consist of two parts , first part is Backend which you are reading now and the other part is Frontend . In this part we gonna design our DB and create secure connection (using JWT) through our API to frontend , where users , request , jobs info all gonna be saved.
+<br/>
+This API gonna cover the authentication part , which includes SignIn, JWT , SignUp , email verification.
+<br/>
+In this API under user we have two accounts type , first is freelancer second is employer .
+</br>
+Employers can publish there own jobs , then freelancer can provides there proposals , employers can accept or decline the proposals , once proposal is accepted one recruiting request gonna be send to freelancer , if both side accept the request the job goona be closed ; also the employer can send request to specific freelancer direclty without waiting for proposal.
+Employer can rate freelancer for each job , and from here freelancer gonna get his average rate.
+WeWork API also provide Conversation route where users can be in touch through messages between them.
+</br>
+
+</p>
 
 
 ## <img src="https://cdn-icons-png.flaticon.com/512/814/814848.png" width="25" height="25" style="padding-right:15px">  Installation 
@@ -188,6 +203,19 @@ npm run dev
  ┣ 📜package-lock.json
  ┗ 📜package.json
 ```
+
+
+## <img src="https://cdn-icons-png.flaticon.com/512/535/535471.png" width="25" height="25" style="padding-right:15px">  Features  
+
+- Simple rest API doc , generated using swagger library , you can check that out at :
+```
+http://localhost:4500/doc
+```
+- Authentications , authorizations are all implemented with differents layers , check Prevalidation folder .
+- Credentials is all well encoded before it saves to DB.
+- Custom implementation of verify account by email 
+- Realtime messaging using Socket.IO (coming soon) 
+
 
 
 ## 📦 Packages
