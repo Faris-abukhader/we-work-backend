@@ -3,7 +3,7 @@
 <img src="https://user-images.githubusercontent.com/70070951/195313293-ed597f4f-a617-44d8-8023-75118b55daad.jpg" width="400" height="200">
 </p>
 <p align="center">
-📔<a href="https://github.com/Faris-abukhader/we-work-backend/blob/master/README_ar.md"> English </a>📔 
+📔<a href="https://github.com/Faris-abukhader/we-work-backend/blob/master/README.md"> English </a>📔 
  </p>
 <p align="center">
  فرونت اند سيكون متاح قريباً  
