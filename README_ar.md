@@ -225,7 +225,7 @@ http://localhost:4500/doc
 ## 📦 المكتبات
 
 
-| Name | Description |
+  | اسم المكتبة  | الوصف |
 | --- | --- |
 | [`@fastify/cors`](https://github.com/fastify/fastify-cors) | Fastify CORS |
 | [`@fastify/static`](https://github.com/fastify/fastify-static) | Plugin for serving static files as fast as possible |
