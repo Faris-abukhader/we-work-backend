@@ -6,7 +6,7 @@
 📔<a href="https://github.com/Faris-abukhader/we-work-backend/blob/master/README.md"> English </a>📔 
  </p>
 <p align="center">
- فرونت اند سيكون متاح قريباً  
+فرونت اند <a href="https://github.com/Faris-abukhader/we-work">من هنا </a>  
 </p>
 
 
