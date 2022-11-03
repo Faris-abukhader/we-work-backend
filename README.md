@@ -5,7 +5,7 @@
 📔<a href="https://github.com/Faris-abukhader/we-work-backend/blob/master/README_ar.md"> بالعربي </a>📔 
  </p>
 <p align="center">
- front-end part is coming soon . . . 
+ front-end part <a href="https://github.com/Faris-abukhader/we-work">from here</>
 </p>
 
 
