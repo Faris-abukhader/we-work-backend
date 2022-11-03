@@ -22,12 +22,13 @@ const createOneRequestSchema = {
       tags:['hiring Request'],
         body:{
           type:'object',
-          required:['ownerId','freelancerId','jobId','ownerNote'],
+          required:['ownerId','freelancerId','jobId','ownerNote','salary'],
           properties:{
             ownerId:{type:'integer'},
             freelancerId:{type:'integer'},
             jobId:{type:'number'},
             ownerNote:{type:'string'},
+            salary:{type:'number'},
           }
         },
         response:{
@@ -51,10 +52,11 @@ const updateOneRequestSchema = {
     },
     body:{
       type:'object',
-      required:['ownerNote','isEmployerAccepet'],
+      required:['ownerNote','isEmployerAccepet','salary'],
       properties:{
         ownerNote:{type:'string'},
         isEmployerAccepet:{type:'boolean'},
+        salary:{type:'number'},
       }
     },
       response:{

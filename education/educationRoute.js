@@ -6,7 +6,7 @@ const {
 
 const educationRoutes = async(fastify, options, done)=> {
   
-    fastify.post('/', createOneEducationSchema)
+    fastify.post('/:id', createOneEducationSchema)
 
     fastify.put('/:userId',updateOneEducationSchema)
 

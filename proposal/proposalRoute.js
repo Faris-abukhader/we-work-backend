@@ -4,6 +4,7 @@ const {
   deleteOneProposalSchema,
   getOneProposalSchema,
   getOneJobAllProposalsSchema,
+  getOneFreelancerAllProposalsSchema,
   acceptOneProposalSchema,
   declineOneProposalSchema,
 } = require('./proposalSchema')
@@ -13,6 +14,8 @@ const proposalRoutes = async(fastify, options, done)=> {
     fastify.get('/:id', getOneProposalSchema)
 
     fastify.get('/job/:id', getOneJobAllProposalsSchema)
+
+    fastify.get('/freelancer/:id', getOneFreelancerAllProposalsSchema)
 
     fastify.post('/', createOneProposalSchema)
 

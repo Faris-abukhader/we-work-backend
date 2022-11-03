@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+
     "@fastify/cors": "^8.1.0",
     "@fastify/static": "^6.5.0",
     "@fastify/swagger": "^7.6.1",

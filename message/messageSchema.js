@@ -13,7 +13,7 @@ const {messageObj} = require('../util/schemaContainer')
 
 const sendOneMessageSchema = {
     schema: {
-      tags:['conversation'],
+      tags:['message'],
         body:{
           type:'object',
           required:['conversationId','senderId','content'],

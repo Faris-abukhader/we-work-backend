@@ -42,6 +42,29 @@ const updateOneProduct = async(req,reply)=>{
             data:{
                 content
             },
+            include:{
+                hiringRequest:{
+                    select:{
+                        job:{
+                            select:{
+                                id:true,
+                                title:true
+                            }
+                        },
+                        owner:{
+                            select:{
+                                user:{
+                                    select:{
+                                        firstName:true,
+                                        lastName:true
+                                    }
+                                }
+                            }
+                        },
+                        salary:true
+                    }
+                },
+            }
         })
 
         reply.send(targetProduct)
@@ -80,7 +103,9 @@ const employerRateProduct = async(req,reply)=>{
             where:{
                 id
             },
-            employerRate
+            data:{
+                employerRate
+            }
         })
 
         reply.send(targetProduct)
@@ -123,15 +148,42 @@ const getOneFreelancerAllProducts = async(req,reply)=>{
     
         await prisma.product.count({
             where:{
-                creatorId:id
+               creator:{
+                userId:id
+               }
             }
         }).then(async(length)=>{
             const data = await prisma.product.findMany({
                 where:{
-                    creatorId:id
+                    creator:{
+                        userId:id
+                    }
                 },
                 take:productRange,
                 skip:toSkip ? (pageNo-1)*productRange:0, 
+                include:{
+                    hiringRequest:{
+                        select:{
+                            job:{
+                                select:{
+                                    id:true,
+                                    title:true
+                                }
+                            },
+                            owner:{
+                                select:{
+                                    user:{
+                                        select:{
+                                            firstName:true,
+                                            lastName:true
+                                        }
+                                    }
+                                }
+                            },
+                            salary:true
+                        }
+                    },
+                }
             })   
             reply.send({data,pageNumber:Math.ceil(length/productRange)}) 
         })
@@ -157,14 +209,18 @@ const getOneEmployerAllProducts = async(req,reply)=>{
         await prisma.product.count({
             where:{
                 hiringRequest:{
-                    ownerId:id
+                    owner:{
+                        userId:id
+                    }
                 }
             }
         }).then(async(length)=>{
             const data = await prisma.product.findMany({
                 where:{
                     hiringRequest:{
-                        ownerId:id
+                        owner:{
+                            userId:id
+                        }
                     }
                 },
                 take:productRange,

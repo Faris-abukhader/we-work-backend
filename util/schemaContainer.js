@@ -55,7 +55,7 @@ freelancerObj = {
         id:{type:'integer'},
         userId:{type:'integer'},
         user:userObj,
-        weeklyWantingHour:{type:'integer'},
+        weeklyWantingHour:{type:'string'},
         hourlyPrice:{type:'integer'},
         aboutMe:{type:'string'},
         shortIntro:{type:'string'},
@@ -112,7 +112,7 @@ languageObj = {
         ownerId:{type:'integer'},
         user:userObj,
         name:{type:'string'},
-        level:{type:'integer'},
+        level:{type:'string'},
     }
 }
 
@@ -171,7 +171,7 @@ jobObj = {
         employer:employerObj,
         title:{type:'string'},
         location:{type:'string'},
-        price:{type:'integer'},
+        salary:{type:'integer'},
         skillRequired:{type:'string'},
         isClosed:{type:'boolean'},
         accepted:{type:'boolean'},
@@ -183,6 +183,8 @@ jobObj = {
         transaction:transactionObj,
         hiringRequest:hiringRequestObj,
         description:{type:'string'},
+        createdAt:{type:'string'},
+        lastUpdate:{type:'string'},
         _count:{}
     }
 }
@@ -200,7 +202,7 @@ proposalObj = {
         timeNeeded:{type:'string'},
         description:{type:'string'},
         createdAt:{type:'string'},
-        lastUpdate:{type:'boolean'},
+        lastUpdate:{type:'string'},
         isAccepted:{type:'boolean'},
         dateOfAccepting:{type:'string'},
         isDecline:{type:'boolean'},
@@ -236,6 +238,7 @@ hiringRequestObj = {
         freelancer:freelancerObj,
         jobId:{type:'integer'},
         job:jobObj,
+        salary:{type:'number'},
         ownerNote:{type:'string'},
         reasonOfRefunding:{type:'string'},
         freelancerNote:{type:'string'},

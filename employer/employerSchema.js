@@ -1,6 +1,8 @@
 const {
   getOneEmployerByEmail,
+  getOneEmployerById,
   updateEmployerInfo,
+  emplyerStatics
 } =  require('./employerController')
 
 const {userObj} = require('../util/schemaContainer')
@@ -28,6 +30,25 @@ const getOneEmployerByEmailSchema = {
       },
       // preValidation:websiteMiddleware,
       handler:getOneEmployerByEmail
+}
+
+
+const getOneEmployerByIdSchema = {
+  schema: {
+    tags:['employer'],
+      params: {
+        type: 'object',
+        required: ['id'],
+        properties:{
+          email : {type:'integer'},
+        }
+      },
+      response:{
+          200:userObj
+      }
+    },
+    // preValidation:websiteMiddleware,
+    handler:getOneEmployerById
 }
 
 
@@ -61,7 +82,34 @@ const updateEmployerInfoSchema = {
 }
 
 
+const employerStaticsSchema = {
+  schema: {
+    tags:['employer'],
+      params: {
+        type: 'object',
+        required: ['id'],
+        properties:{
+          id : {type:'integer'},
+        }
+      },
+      response:{
+          200:{
+            _count:{
+              type:'object',
+              properties:{
+                jobList : {type:'integer'},
+                hiringRequest : {type:'integer'},
+              }
+            }
+          }
+      }
+    },
+    // preValidation:websiteMiddleware,
+    handler:emplyerStatics
+}
 module.exports = {
   getOneEmployerByEmailSchema,
-  updateEmployerInfoSchema
+  getOneEmployerByIdSchema,
+  updateEmployerInfoSchema,
+  employerStaticsSchema
 }

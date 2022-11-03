@@ -1,6 +1,8 @@
 const {
   createOneListOfLanguages,
+  createOneLanguage,
   updateUserLanguageList,
+  deleteOneLanguage
 } =  require('./languageController')
 
 const {languageObj} = require('../util/schemaContainer')
@@ -42,6 +44,26 @@ const createOneListOfLanguagesSchema = {
       handler:createOneListOfLanguages
 }
 
+const createOneLanguageSchema = {
+  schema: {
+    tags:['language'],
+      params: {
+        type: 'object',
+        required: ['id'],
+        properties:{
+          id : {type:'integer'},
+        }
+      },
+      body:languageObj,
+      response:{
+          200:languageObj
+      }
+    },
+    // preValidation:websiteMiddleware,
+    handler:createOneLanguage
+}
+
+
 
 const updateUserLanguageListSchema = {
   schema: {
@@ -81,7 +103,27 @@ const updateUserLanguageListSchema = {
 }
 
 
+const deleteOneLanguageSchema = {
+  schema: {
+    tags:['language'],
+      params: {
+        type: 'object',
+        required: ['id'],
+        properties:{
+          id : {type:'integer'},
+        }
+      },
+      response:{
+          200:languageObj
+      }
+    },
+    // preValidation:websiteMiddleware,
+    handler:deleteOneLanguage
+}
+
 module.exports = {
+  createOneLanguageSchema,
   createOneListOfLanguagesSchema,
-  updateUserLanguageListSchema
+  updateUserLanguageListSchema,
+  deleteOneLanguageSchema
 }

@@ -18,9 +18,9 @@ const productRoutes = async(fastify, options, done)=> {
 
     fastify.delete('/:id',deleteOneProductSchema)
 
-    fastify.get('freelancer/:id/:pageNumber?',getOneFreelancerAllProductSchema)
+    fastify.get('/freelancer/:id/:pageNumber?',getOneFreelancerAllProductSchema)
 
-    fastify.get('employer/:id/:pageNumber?',getOneEmployerAllProductSchema)
+    fastify.get('/employer/:id/:pageNumber?',getOneEmployerAllProductSchema)
 
     fastify.get('/:id',getOneProductByIdSchema)
     

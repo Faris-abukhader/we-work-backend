@@ -1,8 +1,10 @@
 const {
   createOneJob,
   updateOneJob,
+  toggleOneJob,
   deleteOneJob,
   getAllAvailableJob,
+  getOneEmployerAllJobs,
   getOneJob,
   searchJob
 } =  require('./jobController')
@@ -27,12 +29,12 @@ const createOneJobSchema = {
         },
         body:{
           type:'object',
-          required:['title','location','description','price','skillRequired','jobCategory'],
+          required:['title','location','description','salary','skillRequired','jobCategory'],
           properties:{
             title:{type:'string'},
             location:{type:'string'},
             description:{type:'string'},
-            price:{type:'string'},
+            salary:{type:'number'},
             skillRequired:{type:'string'},
             jobCategory:{type:'string'},
           }
@@ -51,12 +53,12 @@ const updateOneJobSchema = {
     tags:['job'],
     body:{
       type:'object',
-      required:['title','location','description','price','skillRequired','jobCategory'],
+      required:['title','location','description','salary','skillRequired','jobCategory'],
       properties:{
         title:{type:'string'},
         location:{type:'string'},
         description:{type:'string'},
-        price:{type:'string'},
+        salary:{type:'number'},
         skillRequired:{type:'string'},
         jobCategory:{type:'string'},
       }
@@ -68,6 +70,26 @@ const updateOneJobSchema = {
   // preValidation:websiteMiddleware,
   handler:updateOneJob
 }
+
+const toggleOneJobSchema = {
+  schema: {
+    tags:['job'],
+    body:{
+      type:'object',
+      required:['id','isClosed'],
+      properties:{
+        id:{type:'integer'},
+        isClosed:{type:'boolean'},
+      }
+    },
+    response:{
+    200:jobObj
+   }
+  },
+  // preValidation:websiteMiddleware,
+  handler:toggleOneJob
+}
+
 
 const deleteOneJobSchema = {
   schema: {
@@ -111,6 +133,36 @@ const getAllAvailableJobSchema = {
   },
   // preValidation:websiteMiddleware,
   handler:getAllAvailableJob
+}
+
+
+
+const getOneEmployerAllJobsSchema = {
+  schema: {
+    tags:['job'],
+    params: {
+      type: 'object',
+      required:['id'],
+      properties:{
+        id: {type:'integer'},
+        pageNumber : {type:'integer'},
+      }
+    },
+    response: {
+      200:{
+        type: 'object',
+        properties: {
+          data:{
+            type: 'array',
+            item: jobObj,
+          },          
+          pageNumber: { type: 'integer' },
+        }
+      }
+    },
+  },
+  // preValidation:websiteMiddleware,
+  handler:getOneEmployerAllJobs
 }
 
 
@@ -172,8 +224,10 @@ const searchJobSchema = {
 module.exports = {
   createOneJobSchema,
   updateOneJobSchema,
+  toggleOneJobSchema,
   deleteOneJobSchema,
   getAllAvailableJobSchema,
+  getOneEmployerAllJobsSchema,
   getOneJobSchema,
   searchJobSchema
 }

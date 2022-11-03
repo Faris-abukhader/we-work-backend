@@ -4,6 +4,7 @@ const {
   deleteOneProposal,
   getOneProposal,
   getOneJobProposals,
+  getOneFreelancerProposals,
   acceptOneProposal,
   declineOneProposal
 } =  require('./proposalController')
@@ -113,6 +114,36 @@ const getOneJobAllProposalsSchema = {
   handler:getOneJobProposals
 }
 
+
+const getOneFreelancerAllProposalsSchema = {
+  schema: {
+    tags:['proposal'],
+    params: {
+      type: 'object',
+      required: ['id'],
+      properties:{
+        id : {type:'integer'},
+        pageNumber : {type:'integer'},
+      }
+    },
+    response:{
+        200:{
+          type: 'object',
+          properties: {
+            data:{
+              type: 'array',
+              item: proposalObj,
+            },          
+            pageNumber: { type: 'integer' },
+          }
+        }
+    }
+  },
+  // preValidation:websiteMiddleware,
+  handler:getOneFreelancerProposals
+}
+
+
 const getOneProposalSchema = {
   schema: {
     tags:['proposal'],
@@ -174,6 +205,7 @@ module.exports = {
   deleteOneProposalSchema,
   getOneProposalSchema,
   getOneJobAllProposalsSchema,
+  getOneFreelancerAllProposalsSchema,
   acceptOneProposalSchema,
   declineOneProposalSchema,
 }

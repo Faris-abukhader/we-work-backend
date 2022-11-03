@@ -16,7 +16,7 @@ model User {
   firstName String
   lastName  String
   nationality String?
-  avatar      String?
+  avatar      String?  @default("avatar-1.svg")
   credit      Decimal @default(100.0)
   currentLocation  String?
   accountType String @db.Char(1)
@@ -37,7 +37,7 @@ model Freelancer {
   userId      Int @unique
   user        User @relation(fields: [userId],references: [id],onDelete: Cascade)
   hourlyPrice Decimal?
-  weeklyWantingHour    Int?
+  weeklyWantingHour    String?
   aboutMe              String? @db.Text
   shortIntro           String? @db.VarChar(50)
   educationList        Education[]
@@ -63,7 +63,7 @@ model Language{
   ownerId     Int 
   user        User @relation(fields: [ownerId],references: [id])
   name        String
-  level       Int
+  level       String @default("Basic")
 }
 
 model Education {
@@ -110,7 +110,7 @@ employer  Employer @relation(fields: [ownerId],references: [id])
 title       String
 location    String
 description String
-price       Decimal 
+salary        Decimal @default(0)
 skillRequired String
 isClosed      Boolean @default(false)
 accepted      Boolean @default(false)
@@ -118,6 +118,9 @@ jobCategory   String
 proposalList  Proposal[]
 transaction   Transaction?
 hiringRequest HiringRequest?
+createdAt   DateTime @default(now())
+lastUpdate  DateTime @updatedAt
+
 }
 
 
@@ -160,6 +163,7 @@ freelancerId Int
 freelancer         Freelancer @relation(fields: [freelancerId],references: [id])
 jobId        Int   @unique
 job                Job @relation(fields: [jobId],references: [id])
+salary       Decimal @default(0.0)
 ownerNote    String?
 freelancerNote String?
 isEmployerAccepet Boolean?

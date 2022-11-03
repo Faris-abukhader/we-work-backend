@@ -47,6 +47,24 @@ const updateOneProposal = async(req,reply)=>{
                 timeNeeded,
                 description
             },
+            include:{
+                job:{
+                    select:{
+                        title:true,
+                        id:true
+                    }
+                },
+                freelancer:{
+                    select:{
+                        user:{
+                            select:{
+                                firstName:true,
+                                lastName:true
+                            }
+                        }
+                    }
+                },
+            },
         })
 
         reply.send(targetProposal)
@@ -129,6 +147,57 @@ const getOneJobProposals = async(req,reply)=>{
 
 }
 
+
+
+const getOneFreelancerProposals = async(req,reply)=>{
+    try{
+        const {id} = req.params
+        let pageNo = 0
+        let toSkip = false
+        if(req.params.pageNumber){
+          pageNo = req.params.pageNumber
+          toSkip = true
+        }
+    
+        await prisma.proposal.count({
+            where:{
+                freelancer:{
+                    userId:id
+                }
+            }
+        }).then(async(length)=>{
+            const data = await prisma.proposal.findMany({
+                where:{
+                    freelancer:{
+                        userId:id
+                    }
+                },
+                include:{
+                    job:{
+                        select:{
+                            title:true,
+                            id:true
+                        }
+                    }
+                },
+                take:proposalRange,
+                skip:toSkip ? (pageNo-1)*proposalRange:0, 
+                orderBy:{
+                    createdAt:'desc'
+                }
+            })   
+            reply.send({data,pageNumber:Math.ceil(length/proposalRange)}) 
+        })
+
+
+    }catch(err){
+        console.log(err)
+        reply.send(err)
+    }
+
+}
+
+
 const acceptOneProposal = async(req,reply)=>{
     try{
         const {id} = req.params
@@ -141,6 +210,18 @@ const acceptOneProposal = async(req,reply)=>{
                 isDecline:false,
                 isAccepted:true,
                 dateOfAccepting:new Date()
+            },
+            include:{
+                freelancer:{
+                    select:{
+                        user:{
+                            select:{
+                                firstName:true,
+                                lastName:true
+                            }
+                        }
+                    }
+                },
             }
         })
 
@@ -164,6 +245,18 @@ const declineOneProposal = async(req,reply)=>{
                 isDecline:true,
                 isAccepted:false,
                 dateOfDecline:new Date()
+            },
+            include:{
+                freelancer:{
+                    select:{
+                        user:{
+                            select:{
+                                firstName:true,
+                                lastName:true
+                            }
+                        }
+                    }
+                },
             }
         })
 
@@ -181,6 +274,7 @@ module.exports = {
     deleteOneProposal,
     getOneProposal,
     getOneJobProposals,
+    getOneFreelancerProposals,
     acceptOneProposal,
     declineOneProposal,
 }

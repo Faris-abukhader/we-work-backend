@@ -1,5 +1,5 @@
 const userRange = 30
-const freelancerRange = 10
+const freelancerRange = 30
 const employerRange = 10
 const languageRange = 20
 const educationRange = 20

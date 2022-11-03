@@ -1,11 +1,12 @@
 const { PrismaClient } = require("@prisma/client")
 const prisma = new PrismaClient()
 const {hiringRequestRange} = require('../util/paginationRange')
+const {verify} = require('jsonwebtoken')
 
 
 const createOneRequest = async(req,reply)=>{
     try{     
-        const {ownerId,freelancerId,jobId,ownerNote} = req.body      
+        const {ownerId,freelancerId,jobId,ownerNote,salary} = req.body      
 
         const newRequest = await prisma.hiringRequest.create({
             data:{
@@ -24,8 +25,10 @@ const createOneRequest = async(req,reply)=>{
                         id:jobId
                     }
                 },
+                salary,
                 ownerNote,
-                isEmployerAccepet:true
+                isEmployerAccepet:true,
+                isFreelancerAccept:false,
             },
         })
 
@@ -41,7 +44,7 @@ const createOneRequest = async(req,reply)=>{
 const updateOneRequest = async(req,reply)=>{
     try{   
         const {id} = req.params  
-        const {ownerNote,isEmployerAccepet} = req.body      
+        const {ownerNote,isEmployerAccepet,salary} = req.body      
 
         const targetRequest = await prisma.hiringRequest.update({
             where:{
@@ -49,8 +52,26 @@ const updateOneRequest = async(req,reply)=>{
             },
             data:{
                 ownerNote,
-                isEmployerAccepet,         
+                isEmployerAccepet, 
+                salary        
             },
+            include:{
+                job:{
+                    select:{
+                        title:true,
+                    }
+                },
+                freelancer:{
+                    select:{
+                        user:{
+                            select:{
+                                firstName:true,
+                                lastName:true
+                            }
+                        }
+                    }
+                }
+            }
         })
 
         reply.send(targetRequest)      
@@ -80,18 +101,61 @@ const deleteOneRequest = async(req,reply)=>{
 }
 
 
+/**
+ * 
+id          Int @id @default(autoincrement())
+creatorId   Int
+creator      Freelancer @relation(fields: [creatorId],references: [id])
+content     String
+requestId   Int @unique
+hiringRequest   HiringRequest @relation(fields: [requestId],references: [id])
+employerRate    Decimal?
+ */
 const freelancerAcceptingRequest = async(req,reply)=>{
     try{
         const {id} = req.params
         const {isFreelancerAccept,freelancerNote} = req.body
+        const freelancerId = verify(req.headers.token,process.env.JWT_SECRET).id
+        let data = {
+            isFreelancerAccept,
+            freelancerNote,
+        }
+
+        if(isFreelancerAccept){
+            data.product = {
+                create:{
+                    creator:{
+                        connect:{
+                            userId:freelancerId
+                        }
+                    },
+                    content:''
+                }
+            }
+        }
+
         const targetRequest = await prisma.hiringRequest.update({
             where:{
                 id
             },
-            data:{
-                isFreelancerAccept,
-                freelancerNote,
-            }
+            data,
+            include:{
+                owner:{
+                    select:{
+                        user:{
+                            select:{
+                                firstName:true,
+                                lastName:true
+                            }
+                        }
+                    }
+                },
+                job:{
+                    select:{
+                        title:true
+                    }
+                }
+            },
         })
         reply.send(targetRequest)
     }catch(err){
@@ -114,18 +178,39 @@ const getOneFreelancerAllHiringRequest = async(req,reply)=>{
     
         await prisma.hiringRequest.count({
             where:{
-                freelancerId:id
+                freelancer:{
+                    userId:id
+                }
             }
         }).then(async(length)=>{
             const data = await prisma.hiringRequest.findMany({
                 where:{
-                    freelancerId:id
+                    freelancer:{
+                        userId:id
+                    }
                 },
                 take:hiringRequestRange,
                 skip:toSkip ? (pageNo-1)*hiringRequestRange:0, 
                 orderBy:{
                     createdAt:'desc'
-                }
+                },
+                include:{
+                    owner:{
+                        select:{
+                            user:{
+                                select:{
+                                    firstName:true,
+                                    lastName:true
+                                }
+                            }
+                        }
+                    },
+                    job:{
+                        select:{
+                            title:true
+                        }
+                    }
+                },
             })   
             reply.send({data,pageNumber:Math.ceil(length/hiringRequestRange)}) 
         })
@@ -148,17 +233,38 @@ const getOneEmployerAllHiringRequest = async(req,reply)=>{
     
         await prisma.hiringRequest.count({
             where:{
-                ownerId:id
+                owner:{
+                    userId:id
+                }
             }
         }).then(async(length)=>{
             const data = await prisma.hiringRequest.findMany({
                 where:{
-                    ownerId:id
+                    owner:{
+                        userId:id
+                    }
                 },
                 take:hiringRequestRange,
                 skip:toSkip ? (pageNo-1)*hiringRequestRange:0, 
                 orderBy:{
                     createdAt:'desc'
+                },
+                include:{
+                    job:{
+                        select:{
+                            title:true,
+                        }
+                    },
+                    freelancer:{
+                        select:{
+                            user:{
+                                select:{
+                                    firstName:true,
+                                    lastName:true
+                                }
+                            }
+                        }
+                    }
                 }
             })   
             reply.send({data,pageNumber:Math.ceil(length/hiringRequestRange)}) 

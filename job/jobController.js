@@ -6,22 +6,30 @@ const {jobRange} = require('../util/paginationRange')
 const createOneJob = async(req,reply)=>{
     try{     
         const {id} = req.params
-        const {title,location,description,price,skillRequired,jobCategory} = req.body
+        const {title,location,description,salary,skillRequired,jobCategory} = req.body
 
+        console.log(id)
         const newJob = await prisma.job.create({
            data:{
             employer:{
                 connect:{
-                    id
+                    userId:id
                 }
             },
             title,
             location,
             description,
-            price,
+            salary,
             skillRequired,
             jobCategory
-           }
+           },
+           include:{
+            _count:{
+                select:{
+                    proposalList:true
+                }
+            }
+        }
         })
 
         reply.send(newJob)
@@ -35,7 +43,7 @@ const createOneJob = async(req,reply)=>{
 
 const updateOneJob = async(req,reply)=>{
     try{     
-        const {id,title,location,description,price,skillRequired,jobCategory} = req.body
+        const {id,title,location,description,salary,skillRequired,jobCategory} = req.body
 
         const targetJob = await prisma.job.update({
             where:{
@@ -45,10 +53,17 @@ const updateOneJob = async(req,reply)=>{
                 title,
                 location,
                 description,
-                price,
+                salary,
                 skillRequired,
                 jobCategory    
             },
+            include:{
+                _count:{
+                    select:{
+                        proposalList:true
+                    }
+                }
+            }
         })
 
         reply.send(targetJob)
@@ -79,7 +94,6 @@ const deleteOneJob = async(req,reply)=>{
 
 const getAllAvailableJob = async(req,reply)=>{
     try{
-
         let pageNo = 0
         let toSkip = false
         if(req.params.pageNumber){
@@ -103,7 +117,18 @@ const getAllAvailableJob = async(req,reply)=>{
                         select:{
                             proposalList:true
                         }
-                    }
+                    },
+                    employer:{
+                        select:{
+                            user:{
+                                select:{
+                                    firstName:true,
+                                    lastName:true,
+                                    avatar:true
+                                }
+                            }
+                        }
+                    },
                 }
             })   
             reply.send({data,pageNumber:Math.ceil(length/jobRange)}) 
@@ -114,6 +139,109 @@ const getAllAvailableJob = async(req,reply)=>{
     }
 }
 
+const toggleOneJob = async(req,reply)=>{
+    try{
+        const {id,isClosed} = req.body
+
+        console.log(id,isClosed)
+
+        const targetJob = await prisma.job.update({
+            where:{
+              id
+            },
+            data:{
+                isClosed    
+            },
+            include:{
+                _count:{
+                    select:{
+                        proposalList:true
+                    }
+                }
+            }
+        })
+
+        reply.send(targetJob)
+    }catch(err){
+        console.log(err)
+        reply.send(err) 
+    }
+}
+
+
+
+const getOneEmployerAllJobs = async(req,reply)=>{
+    try{
+        const {id} = req.params
+        let pageNo = 0
+        let toSkip = false
+        if(req.params.pageNumber){
+          pageNo = req.params.pageNumber
+          toSkip = true
+        }
+    
+        await prisma.job.count({
+            where:{
+                employer:{
+                    userId:id
+                }
+            }
+        }).then(async(length)=>{
+            const data = await prisma.job.findMany({
+                where:{
+                    employer:{
+                        userId:id
+                    }
+                },
+                take:jobRange,
+                skip:toSkip ? (pageNo-1)*jobRange:0, 
+                include:{
+                    _count:{
+                        select:{
+                            proposalList:true
+                        }
+                    },
+                    proposalList:{
+                        select:{
+                            freelancer:{
+                                select:{
+                                    user:{
+                                        select:{
+                                            firstName:true,
+                                            lastName:true
+                                        }
+                                    }
+                                }
+                            },
+                            id:true,
+                            bid:true,
+                            timeNeeded:true,
+                            description:true,
+                            isAccepted:true,
+                            isDecline:true,
+                        }
+                    },
+                    hiringRequest:{
+                        select:{
+                            product:{
+                                select:{
+                                    content:true,
+                                    employerRate:true
+                                }
+                            }
+                        }
+                    }
+                    
+                }
+            })   
+            console.log({pageNumber:Math.ceil(length/jobRange)})
+            reply.send({data,pageNumber:Math.ceil(length/jobRange)}) 
+        })
+    }catch(err){
+        console.log(err)
+        reply.send(err)
+    }
+}
 
 const searchJob = async(req,reply)=>{
     // list of accepted query option for searching property
@@ -190,7 +318,18 @@ const searchJob = async(req,reply)=>{
                 select:{
                     proposalList:true
                 }
-            }
+            },
+            employer:{
+                select:{
+                    user:{
+                        select:{
+                            firstName:true,
+                            lastName:true,
+                            avatar:true
+                        }
+                    }
+                }
+            },
         }
           
         })
@@ -210,6 +349,17 @@ const getOneJob = async(req,reply)=>{
                 id
             },
             include:{
+                employer:{
+                    select:{
+                        user:{
+                            select:{
+                                firstName:true,
+                                lastName:true,
+                                avatar:true
+                            }
+                        }
+                    }
+                },
                 proposalList:true,
                 _count:{
                     select:{
@@ -231,8 +381,10 @@ const getOneJob = async(req,reply)=>{
 module.exports = {
     createOneJob,
     updateOneJob,
+    toggleOneJob,
     deleteOneJob,
     getAllAvailableJob,
+    getOneEmployerAllJobs,
     getOneJob,
     searchJob
 }
