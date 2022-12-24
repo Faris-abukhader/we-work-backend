@@ -1,0 +1,214 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  password  String
+  firstName String
+  lastName  String
+  nationality String?
+  avatar      String?  @default("avatar-1.svg")
+  credit      Decimal @default(100.0)
+  currentLocation  String?
+  accountType String @db.Char(1)
+  createdAt   DateTime @default(now())
+  lastUpdate  DateTime @updatedAt
+  freelancer   Freelancer?
+  employer   Employer?
+  isVerified             Boolean @default(false)
+  verifiedDate         DateTime?
+  languageList         Language[]
+  conversations        Conversation[]
+  token                String
+  changePasswordRequest changePasswordRequest[]
+}
+
+model Freelancer {
+  id          Int @id @default(autoincrement())
+  userId      Int @unique
+  user        User @relation(fields: [userId],references: [id],onDelete: Cascade)
+  hourlyPrice Decimal?
+  weeklyWantingHour    String?
+  aboutMe              String? @db.Text
+  shortIntro           String? @db.VarChar(50)
+  educationList        Education[]
+  certificationList    Certification[]
+  employmentList       EmploymentHistory[]
+  proposalList         Proposal[]
+  hiringRequest        HiringRequest[]
+  products             Product[]
+}
+
+model Employer{
+  id          Int @id @default(autoincrement())
+  userId      Int @unique
+  user        User @relation(fields: [userId],references: [id],onDelete: Cascade)
+  jobList     Job[]
+  hiringRequest HiringRequest[]
+
+}
+
+
+model Language{
+  id          Int @id @default(autoincrement())
+  ownerId     Int 
+  user        User @relation(fields: [ownerId],references: [id])
+  name        String
+  level       String @default("Basic")
+}
+
+model Education {
+  id          Int @id @default(autoincrement())
+  ownerId     Int 
+  freelancer  Freelancer @relation(fields: [ownerId],references: [id])
+  schoolName  String
+  dateAttend  DateTime
+  dateGraduate DateTime
+  areaOfStudy  String
+  degree       String
+  description  String?
+}
+
+model Certification {
+id          Int @id @default(autoincrement())
+ownerId     Int 
+freelancer  Freelancer @relation(fields: [ownerId],references: [id])
+fromWhere     String
+issuedDate    DateTime
+name          String
+description   String?
+
+}
+
+
+model EmploymentHistory{
+id          Int @id @default(autoincrement())
+ownerId     Int 
+freelancer  Freelancer @relation(fields: [ownerId],references: [id])
+companyName String
+position    String
+country     String
+city        String
+fromDate    DateTime
+untilDate   DateTime
+description String?
+}
+
+model Job{
+id          Int @id @default(autoincrement())
+ownerId     Int 
+employer  Employer @relation(fields: [ownerId],references: [id])
+title       String
+location    String
+description String
+salary        Decimal @default(0)
+skillRequired String
+isClosed      Boolean @default(false)
+accepted      Boolean @default(false)
+jobCategory   String
+proposalList  Proposal[]
+transaction   Transaction?
+hiringRequest HiringRequest?
+createdAt   DateTime @default(now())
+lastUpdate  DateTime @updatedAt
+
+}
+
+
+model Proposal {
+id          Int @id @default(autoincrement())
+ownerId     Int 
+freelancer  Freelancer @relation(fields: [ownerId],references: [id])
+jobId       Int
+job         Job @relation(fields: [jobId],references: [id])
+bid         Decimal
+timeNeeded  String
+description String
+createdAt   DateTime @default(now())
+lastUpdate  DateTime @updatedAt
+isAccepted  Boolean @default(false)
+dateOfAccepting DateTime?
+isDecline   Boolean @default(false)
+reasonOfDecline String? 
+dateOfDecline DateTime?
+}
+
+
+model Transaction {
+id          Int @id @default(autoincrement())
+jobId       Int @unique
+job         Job @relation(fields: [jobId],references: [id])
+amount      Decimal
+isRefunded  Boolean @default(false)
+dateOfRefunding DateTime?
+reasonOfRefunding String? 
+createdAt   DateTime @default(now())
+lastUpdate  DateTime @updatedAt
+}
+
+model HiringRequest {
+id          Int @id @default(autoincrement())
+ownerId     Int
+owner              Employer @relation(fields: [ownerId],references: [id])
+freelancerId Int
+freelancer         Freelancer @relation(fields: [freelancerId],references: [id])
+jobId        Int   @unique
+job                Job @relation(fields: [jobId],references: [id])
+salary       Decimal @default(0.0)
+ownerNote    String?
+freelancerNote String?
+isEmployerAccepet Boolean?
+isFreelancerAccept Boolean?
+productId          Int?
+product            Product?
+createdAt   DateTime @default(now())
+lastUpdate  DateTime @updatedAt
+}
+
+
+model Product {
+id          Int @id @default(autoincrement())
+creatorId   Int
+creator      Freelancer @relation(fields: [creatorId],references: [id])
+content     String
+requestId   Int @unique
+hiringRequest   HiringRequest @relation(fields: [requestId],references: [id])
+employerRate    Decimal?
+createdAt   DateTime @default(now())
+lastUpdate  DateTime @updatedAt
+}
+
+model Conversation{
+id          Int @id @default(autoincrement())
+users       User[]
+messages    Message[]
+createdAt   DateTime @default(now())
+
+}
+
+model Message {
+id          Int @id @default(autoincrement())
+conversationId  Int
+conversation    Conversation @relation(fields: [conversationId],references: [id])
+content         String
+senderId        Int
+createdAt   DateTime @default(now())
+}
+
+model changePasswordRequest {
+id          Int @id
+ownerId     Int 
+owner       User @relation(fields: [ownerId],references: [id])
+token       String
+createdAt   DateTime @default(now())
+@@index([id])
+}
